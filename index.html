@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zyntraz | Intelligent Engineering</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href="favicon.ico">
+    
+    <style>
+        /* --- Design Tokens --- */
+        :root {
+            --bg-deep: #000000;
+            --text-white: #ffffff;
+            --text-gray: #94a3b8;
+            --accent-blue: #2563eb;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-white);
+            overflow-x: hidden;
+        }
+
+        /* --- Hero Canvas --- */
+        #hero-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; opacity: 0.6;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, #000000 90%);
+            z-index: 1; pointer-events: none;
+        }
+
+        /* --- Glass Cards (General) --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-4px);
+        }
+
+        /* --- Service Detail Boxes (The Grid Design) --- */
+        .service-detail-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-detail-card:hover {
+            background: linear-gradient(145deg, rgba(37,99,235,0.15) 0%, rgba(37,99,235,0.02) 100%);
+            border-color: rgba(37,99,235,0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(37,99,235,0.3);
+        }
+        /* Accent Bar on Hover */
+        .service-detail-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 3px;
+            background: #2563eb;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        .service-detail-card:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .sd-title { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+        .sd-desc { font-size: 0.9rem; color: #94a3b8; line-height: 1.5; }
+        .sd-icon { font-size: 1.5rem; margin-bottom: 16px; color: #60a5fa; }
+
+        /* --- Big Service Tiles (Overview) --- */
+        .service-tile {
+            border-radius: 24px;
+            padding: 48px;
+            display: flex; flex-direction: column; justify-content: flex-start;
+            min-height: 420px; position: relative; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.4s ease;
+        }
+        .service-tile:hover { transform: scale(1.02); z-index: 10; }
+        .tile-ai { background: linear-gradient(145deg, rgba(15, 23, 42, 0.8), rgba(2, 6, 23, 1)); }
+        .tile-iot { background: linear-gradient(145deg, rgba(23, 37, 84, 0.4), rgba(2, 6, 23, 1)); }
+        .tile-soft { background: linear-gradient(145deg, rgba(30, 41, 59, 0.4), rgba(2, 6, 23, 1)); }
+        
+        .tile-eyebrow { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #60a5fa; margin-bottom: 1rem; }
+        .tile-head { font-size: 3rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; background: linear-gradient(to bottom, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tile-desc { font-size: 1.125rem; color: #94a3b8; line-height: 1.6; max-width: 90%; }
+
+        /* --- Suite Cards --- */
+        .suite-card {
+            border-radius: 20px;
+            background: #0f0f0f;
+            border: 1px solid #222;
+            overflow: hidden;
+            height: 100%;
+            display: flex; flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+        .suite-card:hover { transform: translateY(-8px); }
+        .suite-visual {
+            height: 220px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 4rem; position: relative;
+        }
+        .grad-blue { background: radial-gradient(circle at center, #1e3a8a 0%, #000 70%); }
+        .grad-orange { background: radial-gradient(circle at center, #7c2d12 0%, #000 70%); }
+        .grad-pink { background: radial-gradient(circle at center, #831843 0%, #000 70%); }
+        .grad-purple { background: radial-gradient(circle at center, #4c1d95 0%, #000 70%); }
+
+        .suite-body { padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
+        .badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; background: #333; color: #ccc; padding: 4px 8px; border-radius: 4px; align-self: flex-start; margin-bottom: 12px; }
+        .suite-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; line-height: 1.2; }
+        .suite-desc { font-size: 0.9rem; color: #888; margin-bottom: 24px; flex-grow: 1; }
+        .suite-btn { width: 100%; padding: 12px; background: #2563eb; color: white; font-weight: 600; border-radius: 99px; text-align: center; transition: background 0.2s; }
+        .suite-btn:hover { background: #1d4ed8; }
+
+        /* --- Text Gradient --- */
+        .text-grad-hero { background: linear-gradient(135deg, #fff 30%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-lg border-b border-gray-900">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center">
+                 <img src="logo.png" alt="Zyntraz Logo" style="max-height: 28px;">
+            </a>
+            
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="text-sm font-medium text-gray-300 hover:text-white transition">Home</a>
+                <a href="#overview" class="text-sm font-medium text-gray-300 hover:text-white transition">Overview</a>
+                <a href="#services-detail" class="text-sm font-medium text-gray-300 hover:text-white transition">Services</a>
+                <a href="#suites" class="text-sm font-medium text-gray-300 hover:text-white transition">Products</a>
+                <a href="#about" class="text-sm font-medium text-gray-300 hover:text-white transition">About</a>
+            </div>
+            
+            <a href="#contact" class="hidden md:block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full text-sm transition shadow-lg shadow-blue-500/20">
+                Get Started
+            </a>
+
+            <div class="md:hidden">
+                <input type="checkbox" id="menu-toggle" class="hidden">
+                <label for="menu-toggle" class="text-white cursor-pointer p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </label>
+            </div>
+        </nav>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-black absolute w-full border-b border-gray-800">
+            <a href="#home" class="block py-4 text-center text-gray-300 hover:text-white border-t border-gray-900">Home</a>
+            <a href="#overview" class="block py-4 text-center text-gray-300 hover:text-white border-t border-gray-900">Overview</a>
+            <a href="#services-detail" class="block py-4 text-center text-gray-300 hover:text-white border-t border-gray-900">Services</a>
+            <a href="#suites" class="block py-4 text-center text-gray-300 hover:text-white border-t border-gray-900">Products</a>
+            <a href="#contact" class="block py-4 text-center bg-blue-600 text-white font-bold m-4 rounded-lg">Get Started</a>
+        </div>
+    </header>
+
+    <main>
+
+        <section id="home" class="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
+            <canvas id="hero-canvas"></canvas>
+            <div class="hero-overlay"></div>
+
+            <div class="container mx-auto px-6 relative z-10 text-center mt-10">
+                <h2 class="text-blue-500 font-bold tracking-[0.2em] text-sm md:text-base uppercase mb-6" data-aos="fade-down">Intelligent Engineering</h2>
+                <h1 class="text-5xl md:text-8xl font-extrabold mb-6 tracking-tight text-grad-hero" data-aos="zoom-in" data-aos-delay="100">
+                    ZYNTRAZ
+                </h1>
+                <p class="text-lg md:text-2xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+                    Fusing Advanced AI, Industrial IoT, and High-Scale Software to build autonomous factories, smart cities, and digital platforms.
+                </p>
+                <div class="flex flex-col md:flex-row gap-6 justify-center" data-aos="fade-up" data-aos-delay="300">
+                    <a href="#overview" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-10 rounded-full text-lg transition shadow-2xl shadow-blue-500/30">
+                        View Capabilities
+                    </a>
+                    <a href="#contact" class="flex items-center justify-center text-white hover:text-blue-400 font-medium text-lg transition">
+                        Contact Team <span class="ml-2">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="overview" class="py-32 bg-black border-t border-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-20" data-aos="fade-up">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Core Capabilities.</h2>
+                    <p class="text-xl text-gray-500">Engineered for absolute precision, scale, and reliability.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="service-tile tile-ai" data-aos="fade-right">
+                        <div class="tile-eyebrow">Artificial Intelligence</div>
+                        <h3 class="tile-head">Neural Power.</h3>
+                        <p class="tile-desc">Deploy custom models for computer vision, predictive maintenance, and NLP chatbots.</p>
+                        <div class="absolute bottom-0 right-0 w-64 h-64 bg-blue-600/20 blur-[80px] rounded-full"></div>
+                    </div>
+
+                    <div class="service-tile tile-iot" data-aos="fade-left">
+                        <div class="tile-eyebrow">IoT & Sensors</div>
+                        <h3 class="tile-head">Total<br>Connectivity.</h3>
+                        <p class="tile-desc">Digital twins, smart meters, and real-time sensor networks bridging the physical gap.</p>
+                         <div class="absolute bottom-0 right-0 w-64 h-64 bg-indigo-600/20 blur-[80px] rounded-full"></div>
+                    </div>
+
+                    <div class="service-tile tile-soft md:col-span-2 items-center text-center" data-aos="fade-up">
+                        <div class="tile-eyebrow">Software Platforms</div>
+                        <h3 class="tile-head">Scale without limits.</h3>
+                        <p class="tile-desc mx-auto">From native mobile apps (iOS/Android) to high-performance ERP modules. Built on secure, redundant cloud architecture.</p>
+                         <div class="absolute bottom-[-100px] left-1/2 transform -translate-x-1/2 w-full h-32 bg-blue-500/10 blur-[60px]"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services-detail" class="py-24 bg-[#050505]">
+            <div class="container mx-auto px-6">
+                
+                <div class="mb-24" data-aos="fade-up">
+                    <h2 class="text-4xl font-bold text-white mb-12 border-l-4 border-blue-600 pl-6">IoT Ecosystems</h2>
+                    
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="col-span-1 md:col-span-3 mb-2 mt-4">
+                            <h3 class="text-2xl font-semibold text-white flex items-center gap-3">
+                                <span class="text-blue-500">🏗️</span> Industry & Construction
+                            </h3>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">📊</div>
+                            <h4 class="sd-title">Production Monitoring</h4>
+                            <p class="sd-desc">Track real-time defects, stoppages, and bottlenecks using IoT sensors.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">⚡</div>
+                            <h4 class="sd-title">Smart Energy</h4>
+                            <p class="sd-desc">IoT meters track power; AI optimizes usage to cut costs significantly.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">🔧</div>
+                            <h4 class="sd-title">Vibration & Heat Sensors</h4>
+                            <p class="sd-desc">Detect anomalies in heavy machinery to predict failures before they happen.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-8 mt-12">
+                        <div class="col-span-1 md:col-span-3 mb-2 mt-4">
+                            <h3 class="text-2xl font-semibold text-white flex items-center gap-3">
+                                <span class="text-blue-500">🚚</span> Logistics & Hospitality
+                            </h3>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">📍</div>
+                            <h4 class="sd-title">Fleet Management</h4>
+                            <p class="sd-desc">Real-time GPS tracking, fuel monitoring, and driver behavior analysis.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">❄️</div>
+                            <h4 class="sd-title">Cold Chain</h4>
+                            <p class="sd-desc">Temperature sensors for food and pharma safety compliance.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">🤖</div>
+                            <h4 class="sd-title">Autonomous Bots</h4>
+                            <p class="sd-desc">AI-guided machines for efficient warehouse operations and sorting.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-24" data-aos="fade-up">
+                    <h2 class="text-4xl font-bold text-white mb-12 border-l-4 border-purple-600 pl-6">Software Platforms</h2>
+                    
+                    <div class="grid md:grid-cols-3 gap-8">
+                         <div class="col-span-1 md:col-span-3 mb-2 mt-4">
+                            <h3 class="text-2xl font-semibold text-white flex items-center gap-3">
+                                <span class="text-purple-500">📱</span> Web & Mobile Apps
+                            </h3>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">📲</div>
+                            <h4 class="sd-title">Native Mobile Apps</h4>
+                            <p class="sd-desc">High-performance iOS (Swift) and Android (Kotlin) development.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">🌐</div>
+                            <h4 class="sd-title">Cross-Platform</h4>
+                            <p class="sd-desc">Flutter and React Native for unified, cost-effective deployment.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">🚕</div>
+                            <h4 class="sd-title">On-Demand Apps</h4>
+                            <p class="sd-desc">Scalable platforms for ride-hailing, delivery, and booking services.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-8 mt-12">
+                         <div class="col-span-1 md:col-span-3 mb-2 mt-4">
+                            <h3 class="text-2xl font-semibold text-white flex items-center gap-3">
+                                <span class="text-purple-500">🛍️</span> E-Commerce & Retail
+                            </h3>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">🏪</div>
+                            <h4 class="sd-title">Custom Marketplaces</h4>
+                            <p class="sd-desc">Robust multi-vendor platforms for B2B and B2C operations.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">💳</div>
+                            <h4 class="sd-title">POS Systems</h4>
+                            <p class="sd-desc">Next-gen Point of Sale with real-time inventory synchronization.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">💼</div>
+                            <h4 class="sd-title">ERP Customization</h4>
+                            <p class="sd-desc">Odoo and ERPNext implementation for seamless business operations.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="" data-aos="fade-up">
+                    <h2 class="text-4xl font-bold text-white mb-12 border-l-4 border-indigo-600 pl-6">AI Services</h2>
+                    
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="service-detail-card">
+                            <div class="sd-icon">🏷️</div>
+                            <h4 class="sd-title">Dynamic Pricing</h4>
+                            <p class="sd-desc">Real-time price adjustments based on demand, competition, and stock.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">🔍</div>
+                            <h4 class="sd-title">Visual Search</h4>
+                            <p class="sd-desc">Allow customers to search your catalog using images instead of text.</p>
+                        </div>
+                         <div class="service-detail-card">
+                            <div class="sd-icon">🛡️</div>
+                            <h4 class="sd-title">Fraud Detection</h4>
+                            <p class="sd-desc">Real-time anomaly detection for secure financial transactions.</p>
+                        </div>
+                         <div class="service-detail-card">
+                            <div class="sd-icon">🏥</div>
+                            <h4 class="sd-title">Medical Imaging</h4>
+                            <p class="sd-desc">AI-powered analysis for X-Ray, MRI, and CT scans to assist diagnosis.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">📈</div>
+                            <h4 class="sd-title">Sales Forecasting</h4>
+                            <p class="sd-desc">Predict demand and optimize inventory levels with high accuracy.</p>
+                        </div>
+                        <div class="service-detail-card">
+                            <div class="sd-icon">🤖</div>
+                            <h4 class="sd-title">Robo-Advisors</h4>
+                            <p class="sd-desc">AI-driven investment planning and automated portfolio management.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="suites" class="py-32 bg-black border-t border-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16" data-aos="fade-up">
+                    <h2 class="text-sm font-bold text-blue-600 uppercase tracking-widest mb-3">Products</h2>
+                    <h3 class="text-4xl md:text-5xl font-bold text-white">Industry-Ready Suites.</h3>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="suite-card" data-aos="fade-up" data-aos-delay="0">
+                        <div class="suite-visual grad-blue"><span>🏭</span></div>
+                        <div class="suite-body">
+                            <span class="badge">Best Seller</span>
+                            <h4 class="suite-title">Smart Factory<br>Suite</h4>
+                            <p class="suite-desc">Predictive maintenance, production optimization, and digital twin setup.</p>
+                            <a href="#contact" class="suite-btn">Get Started</a>
+                        </div>
+                    </div>
+                    <div class="suite-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="suite-visual grad-orange"><span>🚚</span></div>
+                        <div class="suite-body">
+                            <span class="badge">Enterprise</span>
+                            <h4 class="suite-title">IoT Logistics<br>Control</h4>
+                            <p class="suite-desc">Complete fleet tracking, fuel monitoring, and cold chain integration.</p>
+                            <a href="#contact" class="suite-btn">Get Started</a>
+                        </div>
+                    </div>
+                    <div class="suite-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="suite-visual grad-pink"><span>🏥</span></div>
+                        <div class="suite-body">
+                            <span class="badge">Medical Grade</span>
+                            <h4 class="suite-title">Connected<br>Healthcare</h4>
+                            <p class="suite-desc">Patient wearables, asset tracking, and smart bed integration.</p>
+                            <a href="#contact" class="suite-btn">Get Started</a>
+                        </div>
+                    </div>
+                    <div class="suite-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="suite-visual grad-purple"><span>🏙️</span></div>
+                        <div class="suite-body">
+                            <span class="badge">Government</span>
+                            <h4 class="suite-title">Smart City<br>OS</h4>
+                            <p class="suite-desc">Traffic management, smart waste bins, lighting, and utilities.</p>
+                            <a href="#contact" class="suite-btn">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-[#0a0a0a] text-white border-t border-gray-900 pt-16 pb-8">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                    
+                    <div class="col-span-1 md:col-span-1">
+                        <a href="#" class="block mb-6">
+                            <img src="logo.png" alt="Zyntraz" style="height: 32px;">
+                        </a>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            Igniting Innovation. Empowering Evolution. We build the digital infrastructure of tomorrow with AI, IoT, and Cloud Engineering.
+                        </p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition">
+                                <span class="text-xs">in</span>
+                            </a>
+                            <a href="#" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition">
+                                <span class="text-xs">tw</span>
+                            </a>
+                            <a href="#" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition">
+                                <span class="text-xs">fb</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-lg font-bold mb-6 text-white">Company</h4>
+                        <ul class="space-y-4 text-sm text-gray-400">
+                            <li><a href="#home" class="hover:text-blue-500 transition">Home</a></li>
+                            <li><a href="#about" class="hover:text-blue-500 transition">About Us</a></li>
+                            <li><a href="#suites" class="hover:text-blue-500 transition">Products</a></li>
+                            <li><a href="#" class="hover:text-blue-500 transition">Careers</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-lg font-bold mb-6 text-white">Services</h4>
+                        <ul class="space-y-4 text-sm text-gray-400">
+                            <li><a href="#services-detail" class="hover:text-blue-500 transition">Artificial Intelligence</a></li>
+                            <li><a href="#services-detail" class="hover:text-blue-500 transition">IoT Ecosystems</a></li>
+                            <li><a href="#services-detail" class="hover:text-blue-500 transition">Software Development</a></li>
+                            <li><a href="#services-detail" class="hover:text-blue-500 transition">Smart Manufacturing</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-lg font-bold mb-6 text-white">Contact</h4>
+                        <ul class="space-y-4 text-sm text-gray-400">
+                            <li class="flex items-start">
+                                <span class="mr-3 mt-1">📍</span>
+                                <span>Colombo, Sri Lanka</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="mr-3">📞</span>
+                                <a href="tel:+94765808361" class="hover:text-white transition">+94 76 580 8361</a>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="mr-3">✉️</span>
+                                <a href="mailto:info@zyntraz.com" class="hover:text-white transition">info@zyntraz.com</a>
+                            </li>
+                        </ul>
+                         <div class="mt-6">
+                            <h5 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Newsletter</h5>
+                            <div class="flex">
+                                <input type="email" placeholder="Email address" class="w-full bg-gray-900 border border-gray-700 text-white px-3 py-2 text-sm rounded-l focus:outline-none focus:border-blue-500">
+                                <button class="bg-blue-600 px-3 py-2 text-sm rounded-r hover:bg-blue-700 transition">Go</button>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                    <p>&copy; <span id="year"></span> Zyntraz. All rights reserved.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                        <a href="#" class="hover:text-white transition">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Init AOS
+        AOS.init({ duration: 800, once: true, offset: 50 });
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        document.querySelectorAll('#mobile-menu a').forEach(item => {
+            item.addEventListener('click', () => menuToggle.checked = false);
+        });
+
+        // --- FUTURISTIC PARTICLE ANIMATION SCRIPT ---
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        
+        // Settings
+        const particleCount = 60; 
+        const connectionDistance = 180;
+        const mouseDistance = 250;
+
+        let mouse = { x: null, y: null };
+
+        window.addEventListener('mousemove', e => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles();
+        }
+        window.addEventListener('resize', resize);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+                this.color = Math.random() > 0.5 ? '#3b82f6' : '#ffffff'; 
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                p.update();
+                p.draw();
+
+                if (mouse.x != null) {
+                    let dx = mouse.x - p.x;
+                    let dy = mouse.y - p.y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    if (distance < mouseDistance) {
+                        ctx.strokeStyle = `rgba(59, 130, 246, ${1 - distance/mouseDistance})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+
+                for (let j = i; j < particles.length; j++) {
+                    let p2 = particles[j];
+                    let dx = p.x - p2.x;
+                    let dy = p.y - p2.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+
+                    if (dist < connectionDistance) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist/connectionDistance)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        resize();
+        animate();
+    </script>
+</body>
+</html>
