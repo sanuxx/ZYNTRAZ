@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zyntraz | Intelligent Engineering</title>
+    <title>ZYNTRAZ | Intelligent Engineering</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -20,14 +20,18 @@
         :root {
             --blue-core: #2563eb;
             --blue-bright: #3b82f6;
-            --anim-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            --anim-cinematic: cubic-bezier(0.19, 1, 0.22, 1); /* Apple-style smooth easing */
         }
 
-        /* --- 2. GLOBAL BACKGROUND (Moved to HTML to fix white flash) --- */
+        /* REMOVE DEFAULT WHITE TAP HIGHLIGHT ON MOBILE */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- 2. GLOBAL BACKGROUND --- */
         html {
-            background-color: #000000; /* Fallback black */
-            /* Gradient moved here to ensure full coverage */
-            background-image: radial-gradient(circle at 50% 0%, #1e3a8a 0%, #0f172a 40%, #000000 90%);
+            background-color: #000000;
+            background-image: radial-gradient(circle at 50% 0%, #172554 0%, #020617 50%, #000000 100%);
             background-attachment: fixed;
             background-size: cover;
             min-height: 100vh;
@@ -40,7 +44,7 @@
             color: white;
             overflow-x: hidden;
             margin: 0;
-            background: transparent; /* Removed gradient from here */
+            background: transparent;
             min-height: 100vh;
         }
 
@@ -51,7 +55,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Sits behind content, but on top of HTML background */
+            z-index: -1; 
             opacity: 0.5;
             pointer-events: none;
             mix-blend-mode: screen;
@@ -59,10 +63,10 @@
 
         /* --- NAV BAR --- */
         .nav-glass {
-            background: rgba(10, 15, 30, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             transition: background 0.3s ease;
         }
@@ -99,7 +103,7 @@
             left: 0;
         }
 
-        /* --- HERO --- */
+        /* --- HERO (LANDING PAGE) --- */
         .hero-section {
             position: relative;
             min-height: 100vh;
@@ -112,6 +116,17 @@
             padding: 20px;
         }
 
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #000000 40%, rgba(0,0,0,0) 100%);
+            z-index: -2; 
+        }
+
         .hero-big-text {
             font-size: clamp(3rem, 13vw, 9rem);
             font-weight: 900;
@@ -121,7 +136,7 @@
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 40px rgba(37, 99, 235, 0.4));
             opacity: 0;
-            animation: cinematicReveal 2s var(--anim-smooth) forwards, breatheText 6s ease-in-out 2s infinite;
+            animation: cinematicReveal 2s var(--anim-cinematic) forwards, breatheText 6s ease-in-out 2s infinite;
             text-transform: uppercase;
             will-change: transform, opacity, letter-spacing;
             text-align: center;
@@ -141,25 +156,46 @@
         .cap-card {
             padding: 24px;
             border-radius: 24px;
-            background: rgba(3, 3, 3, 0.6); 
+            
+            /* TRANSPARENT BLACK GLASS BASE */
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), 
                 linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
             background-size: 30px 30px;
-            border: 1px solid rgba(255,255,255,0.08);
+            
             display: flex; flex-direction: column; 
             min-height: 380px; 
-            backdrop-filter: blur(10px);
-            transition: transform 0.5s var(--anim-smooth), box-shadow 0.5s var(--anim-smooth), border-color 0.4s ease;
+            
+            /* CINEMATIC TRANSITION */
+            transition: all 0.5s var(--anim-cinematic); 
             position: relative; overflow: hidden;
+            cursor: pointer;
         }
         @media (min-width: 768px) { .cap-card { padding: 40px; } }
         
+        /* HOVER: Cinematic Pop Up (Remains Dark/Black) */
         .cap-card:hover {
-            border-color: rgba(59, 130, 246, 0.4); 
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8), 0 0 20px rgba(37, 99, 235, 0.1);
-            background-color: rgba(10, 10, 10, 0.8);
+            /* Make it darker/more opaque black, NOT white */
+            background: rgba(0, 0, 0, 0.6); 
+            border-color: rgba(59, 130, 246, 0.5); /* Blue glow border */
+            
+            /* Cinematic Pop */
+            transform: translateY(-12px) scale(1.02); 
+            box-shadow: 
+                0 30px 60px -12px rgba(0,0,0,0.9), /* Deep dark shadow */
+                0 0 25px rgba(37, 99, 235, 0.15); /* Subtle blue atmospheric glow */
+        }
+
+        /* ACTIVE: Press Down (No white flash) */
+        .cap-card:active {
+            transform: scale(0.98) translateY(-4px);
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 10px 30px -5px rgba(0,0,0,0.9);
         }
 
         .cap-subtitle { font-size: 0.75rem; font-weight: 700; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; display: block; }
@@ -170,7 +206,7 @@
         @media(min-width: 768px) { .cap-desc { font-size: 1rem; } }
 
         .pill-container-bottom { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; }
-        .pill-dark { font-size: 0.7rem; padding: 6px 14px; border-radius: 99px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #94a3b8; font-weight: 600; }
+        .pill-dark { font-size: 0.7rem; padding: 6px 14px; border-radius: 99px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); color: #94a3b8; font-weight: 600; }
 
         .cap-card-wide { grid-column: 1 / -1; display: flex; flex-direction: column; }
         .ccw-left { flex: 0 0 40%; display: flex; flex-direction: column; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 30px; margin-bottom: 30px; }
@@ -185,13 +221,13 @@
         .inner-feature-grid { display: grid; grid-template-columns: 1fr; gap: 16px; width: 100%; }
         @media (min-width: 640px) { .inner-feature-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
         
-        .ifg-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; transition: all 0.3s ease; }
-        .ifg-item:hover { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); }
+        .ifg-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; transition: all 0.3s ease; }
+        .ifg-item:hover { background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.2); transform: translateY(-3px); }
         .ifg-title { font-size: 0.9rem; font-weight: 700; color: white; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
         .ifg-desc { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; }
 
 
-        /* --- NEW: KINETIC ACCORDION STACK --- */
+        /* --- KINETIC ACCORDION STACK (Reduced Glass Effect) --- */
         .kinetic-stack {
             display: flex;
             flex-direction: column;
@@ -201,16 +237,23 @@
         }
 
         .kinetic-item {
-            background: rgba(10, 10, 15, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            /* REDUCED GLASS: Transparent Black base */
+            background: rgba(0, 0, 0, 0.2); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             overflow: hidden;
-            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            backdrop-filter: blur(12px);
+            transition: all 0.5s var(--anim-cinematic);
+            backdrop-filter: blur(6px); /* Low blur */
+            -webkit-backdrop-filter: blur(6px);
             position: relative;
         }
+        
+        .kinetic-item:hover {
+            transform: translateY(-2px);
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255,255,255,0.1);
+        }
 
-        /* The Header Bar (Visible always) */
         .kinetic-header {
             padding: 20px 24px;
             display: flex;
@@ -218,7 +261,7 @@
             justify-content: space-between;
             cursor: pointer;
             user-select: none;
-            background: linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
+            background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent);
         }
         
         .kh-left { display: flex; align-items: center; gap: 16px; }
@@ -226,21 +269,19 @@
         .kh-title { font-size: 1.1rem; font-weight: 700; color: #e2e8f0; transition: color 0.3s; }
         .kh-icon { width: 20px; height: 20px; color: #64748b; transition: transform 0.4s ease, color 0.3s; }
 
-        /* Hover State */
-        .kinetic-item:hover .kinetic-header { background: rgba(255,255,255,0.04); }
+        .kinetic-item:hover .kinetic-header { background: rgba(255,255,255,0.02); }
         .kinetic-item:hover .kh-title { color: white; }
 
-        /* Active State (When opened) */
+        /* Active State for Accordion */
         .kinetic-item.active {
-            background: rgba(15, 23, 42, 0.6);
-            border-color: rgba(59, 130, 246, 0.5);
-            box-shadow: 0 0 30px rgba(37, 99, 235, 0.15);
+            background: rgba(0, 0, 0, 0.5); /* Darker black */
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.1);
         }
         
         .kinetic-item.active .kh-title { color: #3b82f6; }
         .kinetic-item.active .kh-icon { transform: rotate(180deg); color: #3b82f6; }
 
-        /* The Body (Hidden by default) */
         .kinetic-body {
             max-height: 0;
             overflow: hidden;
@@ -253,7 +294,6 @@
             border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Inner Layout of Body */
         .kb-inner {
             padding: 24px;
             display: flex;
@@ -266,7 +306,6 @@
             .kb-visual { flex: 1; min-height: 300px; }
         }
 
-        /* --- VISUALS (Reused & Tweaked) --- */
         .swc-desc { font-size: 0.95rem; color: #94a3b8; line-height: 1.6; margin-bottom: 24px; }
         .feature-list li { display: flex; align-items: start; margin-bottom: 10px; color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; }
         .check-icon { margin-right: 12px; margin-top: 4px; flex-shrink: 0; width: 16px; height: 16px; color: #3b82f6; }
@@ -286,7 +325,7 @@
         }
         @media(min-width: 768px) { .kb-visual-container { height: 100%; } }
 
-        /* --- 1. NEW AI ANIMATION: GYROSCOPE --- */
+        /* --- ANIMATIONS --- */
         .gyro-container { width: 180px; height: 180px; position: relative; transform-style: preserve-3d; perspective: 600px; display: flex; align-items: center; justify-content: center; }
         .gyro-ring { border: 2px solid rgba(59,130,246,0.4); border-radius: 50%; position: absolute; box-shadow: 0 0 10px rgba(59,130,246,0.1); }
         .gr-1 { width: 100%; height: 100%; animation: rotate1 4s linear infinite; border-color: rgba(59,130,246,0.6); }
@@ -298,7 +337,6 @@
         @keyframes rotate3 { 0% { transform: rotateX(60deg) rotateY(0deg); } 100% { transform: rotateX(60deg) rotateY(360deg); } }
         @keyframes pulseCore { 0%, 100% { transform: scale(0.9); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 50px #3b82f6; } }
 
-        /* --- 2. NEW AGENTS ANIMATION: LOGIC STREAM --- */
         .logic-container { width: 220px; height: 140px; display: flex; align-items: center; justify-content: space-between; position: relative; }
         .logic-gate { width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #64748b; z-index: 2; transition: all 0.2s; }
         .logic-path { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.1); transform: translateY(-50%); z-index: 1; }
@@ -306,58 +344,74 @@
         @keyframes packetMove {
             0% { left: 0; opacity: 0; }
             10% { opacity: 1; }
-            30% { left: 40px; } /* Hit Gate 1 */
+            30% { left: 40px; }
             35% { transform: translateY(-50%) scale(1.5); } 
             40% { transform: translateY(-50%) scale(1); }
-            60% { left: 130px; } /* Hit Gate 2 */
+            60% { left: 130px; }
             65% { transform: translateY(-50%) scale(1.5); }
             70% { transform: translateY(-50%) scale(1); }
             90% { left: 210px; opacity: 1; }
             100% { left: 220px; opacity: 0; }
         }
-        /* Make gates glow when packet hits them approximately */
         .gate-1 { animation: gateGlow 3s infinite; animation-delay: 0.9s; }
         .gate-2 { animation: gateGlow 3s infinite; animation-delay: 1.8s; }
         .gate-3 { animation: gateGlow 3s infinite; animation-delay: 2.7s; }
         @keyframes gateGlow { 0% { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); box-shadow: none; color: #64748b; } 10% { border-color: #3b82f6; background: rgba(59,130,246,0.2); box-shadow: 0 0 15px rgba(59,130,246,0.3); color: white; } 30% { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); box-shadow: none; color: #64748b; } }
 
-        /* --- 3. NEW IOT ANIMATION: ISOMETRIC STACK --- */
         .iso-container { width: 200px; height: 200px; position: relative; transform: scale(0.8); display: flex; align-items: center; justify-content: center; }
         .iso-stack { position: relative; width: 120px; height: 120px; transform: rotateX(60deg) rotateZ(-45deg); transform-style: preserve-3d; }
         .iso-layer { position: absolute; width: 100%; height: 100%; border: 1px solid rgba(59,130,246,0.3); background: rgba(30, 58, 138, 0.2); transition: all 0.3s; }
         .il-1 { transform: translateZ(0px); box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         .il-2 { transform: translateZ(30px); }
         .il-3 { transform: translateZ(60px); background: rgba(59,130,246,0.1); border-color: #3b82f6; box-shadow: 0 0 15px rgba(59,130,246,0.2); }
-        
         .iso-data { position: absolute; width: 6px; height: 6px; background: #fff; border-radius: 50%; bottom: 0; left: 50%; transform: translateX(-50%); box-shadow: 0 0 10px white; opacity: 0; animation: dataRise 2s infinite linear; }
         .id-1 { left: 20%; animation-delay: 0s; }
         .id-2 { left: 80%; animation-delay: 0.7s; }
         .id-3 { left: 50%; animation-delay: 1.4s; }
-        
-        @keyframes dataRise { 
-            0% { transform: translateZ(0px); opacity: 0; } 
-            20% { opacity: 1; } 
-            80% { opacity: 1; } 
-            100% { transform: translateZ(100px); opacity: 0; } 
-        }
+        @keyframes dataRise { 0% { transform: translateZ(0px); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateZ(100px); opacity: 0; } }
 
-        /* --- INDUSTRY SUITES --- */
+        /* --- INDUSTRY SUITES (INTENSIFIED GLASS EFFECT) --- */
         .bento-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
         @media (min-width: 900px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
 
         .suite-card {
-            background: rgba(3, 3, 3, 0.6); /* Glassy */
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 24px;
+            /* INTENSIFIED GLASS: Transparent Black Base */
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.15); 
+            border-radius: 24px; 
+            padding: 24px;
             display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;
-            backdrop-filter: blur(10px);
-            transition: transform 0.5s var(--anim-smooth), box-shadow 0.5s var(--anim-smooth), border-color 0.4s ease;
+            
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            
+            transition: all 0.5s var(--anim-cinematic);
+            
             background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
             background-size: 24px 24px;
             min-height: 300px;
+            cursor: pointer;
         }
         @media(min-width: 768px) { .suite-card { padding: 32px; min-height: 340px; } }
         
-        .suite-card:hover { border-color: rgba(59, 130, 246, 0.5); transform: translateY(-6px); background-color: rgba(10, 10, 10, 0.8); }
+        /* HOVER EFFECT: Cinematic Pop Up (Darker) */
+        .suite-card:hover { 
+            border-color: rgba(255, 255, 255, 0.3); 
+            
+            /* Cinematic Pop */
+            transform: translateY(-12px) scale(1.02); 
+            background-color: rgba(0, 0, 0, 0.6); /* Darker black */
+            box-shadow: 
+                0 30px 60px -12px rgba(0,0,0,0.95), /* Heavy dark shadow */
+                0 0 30px rgba(59, 130, 246, 0.2); 
+        }
+        
+        /* ACTIVE EFFECT: Cinematic Press (No White) */
+        .suite-card:active {
+            transform: scale(0.98) translateY(-4px);
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 10px 30px -5px rgba(0,0,0,0.9);
+        }
 
         .sc-wide { grid-column: span 1; display: flex; flex-direction: column; }
         @media (min-width: 900px) {
@@ -384,20 +438,24 @@
 
         /* --- CONTACT FORM GLASS STYLE --- */
         .contact-glass {
-            background: linear-gradient(135deg, rgba(30, 58, 138, 0.3) 0%, rgba(11, 11, 15, 0.7) 100%);
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.2) 0%, rgba(5, 5, 10, 0.8) 100%);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            box-shadow: 0 20px 60px -10px rgba(37, 99, 235, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 20px 60px -10px rgba(37, 99, 235, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        /* HOVER EFFECT: POP UP & SHADOW */
+        .contact-glass:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 70px -10px rgba(37, 99, 235, 0.2);
         }
 
-        /* --- ANIMATIONS (Optimized) --- */
         .device-container { width: 240px; height: 160px; position: relative; transform-style: preserve-3d; animation: floatRotate 6s infinite ease-in-out; transform: scale(0.8); }
         @media(min-width: 768px) { .device-container { transform: scale(1); } }
-        
         .dashboard-ui { width: 220px; height: 150px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; position: relative; overflow: hidden; display: flex; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: scale(0.9); }
         @media(min-width: 768px) { .dashboard-ui { transform: scale(1); } }
-
         @keyframes floatRotate { 0%, 100% { transform: rotateY(-10deg) rotateX(5deg) translateY(0); } 50% { transform: rotateY(-5deg) rotateX(2deg) translateY(-10px); } }
         @keyframes scrollContent { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
 
@@ -480,7 +538,7 @@
             </div>
         </section>
 
-        <section id="capabilities" class="py-20 md:py-32 border-t border-gray-800/30">
+        <section id="capabilities" class="py-20 md:py-32">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16" data-aos="fade-up">
                     <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Core Capabilities.</h2>
@@ -541,7 +599,7 @@
             </div>
         </section>
 
-        <section id="services-deep" class="py-20 md:py-32 border-t border-gray-800/30">
+        <section id="services-deep" class="py-20 md:py-32">
             <div class="container mx-auto px-4 md:px-6">
                 <div class="text-center mb-16">
                      <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Deep Dive Services.</h2>
@@ -725,7 +783,7 @@
             </div>
         </section>
 
-        <section id="suites" class="py-20 md:py-32 border-t border-gray-800/30">
+        <section id="suites" class="py-20 md:py-32">
             <div class="container mx-auto px-6">
                 <div class="mb-16">
                     <h2 class="text-sm font-bold text-blue-500 uppercase tracking-widest mb-3">Products</h2>
@@ -741,7 +799,7 @@
                             <h4 class="sc-title">Smart POS System</h4>
                             <p class="sc-desc">A unified Point of Sale system that integrates inventory, predicts demand, and tracks customer behavior in real-time.</p>
                         </div>
-                        <a href="#contact" class="sc-link">COMING SOON &rarr;</a>
+                        <a href="#contact" class="sc-link">COMING SOON</a> &rarr;</a>
                     </div>
 
                     <div class="suite-card" data-aos="fade-up" data-aos-delay="100">
@@ -760,7 +818,7 @@
                             <h4 class="sc-title">Lead Classification AI</h4>
                             <p class="sc-desc">Stop wasting time on unqualified leads. Our NLP engine automatically scans incoming emails and inquiries, scoring them based on intent and potential value. Instantly route high-priority prospects to your best agents.</p>
                             <br>
-                            <a href="https://leads.zyntraz.com/" class="sc-link">VISIT </a> &rarr;</a>
+                            <a href="https://leads.zyntraz.com/" class="sc-link">VISIT &rarr;</a>
                         </div>
                         <div class="sc-wide-visual hidden md:flex">
                             <div class="lead-vis-container">
@@ -782,7 +840,7 @@
             </div>
         </section>
 
-        <section id="contact" class="py-20 md:py-32 border-t border-gray-800/30">
+        <section id="contact" class="py-20 md:py-32">
             <div class="container mx-auto px-6 max-w-4xl text-center">
                 <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Ready to evolve?</h2>
                 <p class="text-lg md:text-xl text-gray-400 mb-12">Let's discuss how Zyntraz can engineer your digital future.</p>
@@ -806,7 +864,7 @@
             </div>
         </section>
 
-        <footer class="py-16 border-t border-gray-800/30 text-center relative z-10 bg-transparent">
+        <footer class="py-16 text-center relative z-10 bg-transparent">
             <div class="container mx-auto px-6">
                 <img src="logo.png" alt="Zyntraz" style="max-width: 180px; margin: 0 auto 16px; display: block; filter: brightness(0) invert(1);">
                 
@@ -815,9 +873,9 @@
                 </div>
                 
                 <div style="color: #3b82f6; font-size: 1.1rem; margin-bottom: 12px; font-weight: 500;">
-                    <a href="tel:+94765808361" style="text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#3b82f6'">+94 76 580 8361</a>
+                    <a href="tel:+94765808361" style="text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#3b82f6'">+94 77 743 7250</a>
                     <span style="color: #444; margin: 0 12px;">|</span>
-                    <a href="tel:+94777437250" style="text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#3b82f6'">+94 77 743 7250</a>
+                    <a href="tel:+94777437250" style="text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#3b82f6'">+94 76 580 8361</a>
                 </div>
                 
                 <a href="mailto:info@zyntraz.com" style="color: #3b82f6; font-size: 1.1rem; margin-bottom: 50px; display: block; text-decoration: none; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">info@zyntraz.com</a>
