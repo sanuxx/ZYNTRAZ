@@ -5,33 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZYNTRAZ | Intelligent Engineering</title>
     
+    <script type="text/javascript" src="https://me.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=s19LDQ56Eslt21zKHOXummDewedJ3LGXk3dCVwqyyE5WQSxVG_xiO2V8f8vlA3Q-" charset="UTF-8"></script>
+    <link rel="stylesheet" crossorigin="anonymous" href="https://me.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly96eW50cmF6LmNvbS8/"/>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
     <link rel="icon" type="image/png" href="favicon.ico">
-    
+
     <style>
         /* --- 1. THEME VARIABLES --- */
         :root {
             --blue-core: #2563eb;
             --blue-bright: #3b82f6;
-            --anim-cinematic: cubic-bezier(0.19, 1, 0.22, 1); /* Apple-style smooth easing */
+            --cyan-accent: #06b6d4; 
+            --glass-border: rgba(59, 130, 246, 0.3);
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1); 
+            --ease-float: cubic-bezier(0.45, 0, 0.55, 1);
         }
 
         /* REMOVE DEFAULT WHITE TAP HIGHLIGHT ON MOBILE */
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { -webkit-tap-highlight-color: transparent; }
 
         /* --- 2. GLOBAL BACKGROUND --- */
         html {
             background-color: #000000;
-            background-image: radial-gradient(circle at 50% 0%, #172554 0%, #020617 50%, #000000 100%);
+            background-image: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 50%, #000000 100%);
             background-attachment: fixed;
             background-size: cover;
             min-height: 100vh;
@@ -56,7 +58,7 @@
             width: 100%;
             height: 100%;
             z-index: -1; 
-            opacity: 0.5;
+            opacity: 0.25; 
             pointer-events: none;
             mix-blend-mode: screen;
         }
@@ -64,28 +66,24 @@
         /* --- NAV BAR --- */
         .nav-glass {
             background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            transition: background 0.3s ease;
-        }
-        
+            transition: all 0.8s var(--ease-cinematic);
+        }        
         .nav-link {
             position: relative;
             font-size: 0.9rem;
             font-weight: 500;
             color: #94a3b8;
             text-decoration: none;
-            transition: color 0.3s ease, text-shadow 0.3s ease;
+            transition: color 0.5s var(--ease-cinematic);
             padding: 6px 0;
         }
-
         .nav-link:hover {
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
         }
-
         .nav-link::after {
             content: '';
             position: absolute;
@@ -95,113 +93,427 @@
             left: 50%;
             background: #3b82f6;
             box-shadow: 0 0 10px #3b82f6;
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.6s var(--ease-cinematic);
         }
+        .nav-link:hover::after { width: 100%; left: 0; }
 
-        .nav-link:hover::after {
-            width: 100%;
-            left: 0;
-        }
-
-        /* --- HERO (LANDING PAGE) --- */
+        /* =========================================
+           CINEMATIC HERO SECTION
+           ========================================= */
         .hero-section {
             position: relative;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            background: transparent; 
             overflow: hidden;
-            padding: 20px;
+            padding: 100px 20px 60px 20px; 
         }
 
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .hero-container {
+            display: flex;
+            flex-direction: column;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, #000000 40%, rgba(0,0,0,0) 100%);
-            z-index: -2; 
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 40px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        @media (min-width: 1024px) {
+            .hero-container {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 60px;
+            }
         }
 
-        .hero-big-text {
-            font-size: clamp(3rem, 13vw, 9rem);
+        /* --- LEFT SIDE: CONTENT --- */
+        .hero-content {
+            flex: 1;
+            z-index: 10;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: cinematicFadeIn 1.5s var(--ease-cinematic) forwards;
+            animation-delay: 0.2s;
+        }
+        @media (min-width: 1024px) {
+            .hero-content {
+                text-align: left;
+                max-width: 50%;
+            }
+        }
+
+        @keyframes cinematicFadeIn {
+            0% { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        .hero-tagline {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 4px;
+            padding: 8px 16px;
+            margin-bottom: 24px;
+            font-family: monospace;
+            color: #60a5fa;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            position: relative;
+        }
+        .hero-tagline::before {
+            content: '';
+            display: inline-block;
+            width: 8px; height: 8px;
+            background: #60a5fa;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 8px #60a5fa;
+            animation: pulseDot 3s infinite ease-in-out;
+        }
+        @keyframes pulseDot { 0%,100%{opacity:1; transform: scale(1);} 50%{opacity:0.4; transform: scale(0.8);} }
+
+        .hero-title {
+            font-size: clamp(3rem, 6vw, 5.5rem);
             font-weight: 900;
-            line-height: 0.9;
-            background: linear-gradient(180deg, #ffffff 30%, #1d4ed8 100%);
+            line-height: 0.95;
+            margin-bottom: 24px;
+            background: linear-gradient(180deg, #ffffff 20%, #2563eb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 40px rgba(37, 99, 235, 0.4));
+            filter: drop-shadow(0 0 30px rgba(37, 99, 235, 0.3));
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
             opacity: 0;
-            animation: cinematicReveal 2s var(--anim-cinematic) forwards, breatheText 6s ease-in-out 2s infinite;
+            animation: cinematicFadeIn 1.5s var(--ease-cinematic) forwards;
+            animation-delay: 0.5s; 
+        }
+        @media (min-width: 1024px) { .hero-desc { margin-left: 0; margin-right: auto; } }
+
+        .hero-btns-container {
+            display: flex;
+            flex-col: row;
+            gap: 20px;
+            justify-content: center;
+            opacity: 0;
+            animation: cinematicFadeIn 1.5s var(--ease-cinematic) forwards;
+            animation-delay: 0.7s; 
+        }
+        @media (min-width: 1024px) { .hero-btns-container { justify-content: flex-start; } }
+
+        /* ==================================================
+           LIQUID GLASS BUTTON STYLES
+           ================================================== */
+        .hero-btn {
+            position: relative;
+            /* Liquid Glass Gradient: Transparent with a slight blue tint */
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(59, 130, 246, 0.1));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: white;
+            font-weight: 600;
+            padding: 16px 36px;
+            border-radius: 99px; /* Pill Shape */
+            
+            /* Highlighting edges for the glass look */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.4); 
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+            
+            /* Deep shadows to simulate thickness and inner light */
+            box-shadow: 
+                0 8px 32px 0 rgba(31, 38, 135, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 0 20px rgba(59, 130, 246, 0.2);
+                
+            transition: all 0.5s var(--ease-cinematic);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Light sheen animation */
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.7s ease;
+            transform: skewX(-20deg);
+            z-index: -1;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            /* Glow gets more intense on hover */
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(59, 130, 246, 0.2));
+            box-shadow: 
+                0 20px 40px rgba(37, 99, 235, 0.4),
+                inset 0 0 30px rgba(255, 255, 255, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .hero-btn:hover::before {
+            left: 150%; /* Slides the sheen across */
+        }
+        
+        /* Secondary Glass Button */
+        .hero-btn-outline {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #cbd5e1;
+            font-weight: 500;
+            padding: 16px 36px;
+            border-radius: 99px;
+            
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            
+            box-shadow: 
+                0 4px 15px rgba(0,0,0,0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+                
+            transition: all 0.5s var(--ease-cinematic);
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .hero-btn-outline:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* --- RIGHT SIDE: DASHBOARD ANIMATION --- */
+        .hero-visuals {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px; 
+            width: 100%;
+            height: 500px;
+            z-index: 10;
+            
+            opacity: 0;
+            transform: translateX(40px);
+            animation: dashboardEnter 1.8s var(--ease-cinematic) forwards;
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes dashboardEnter {
+            0% { opacity: 0; transform: translateX(50px) rotateY(-10deg); filter: blur(5px); }
+            100% { opacity: 1; transform: translateX(0) rotateY(0deg); filter: blur(0); }
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 650px;
+            height: 420px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 
+                0 30px 80px -20px rgba(0,0,0,0.9), 
+                inset 0 0 40px rgba(37, 99, 235, 0.05);
+            
+            transform: rotateY(-8deg) rotateX(4deg);
+            transition: transform 0.8s var(--ease-cinematic);
+            animation: floatDashboard 8s var(--ease-float) infinite;
+            
+            display: grid;
+            grid-template-rows: 40px 1fr;
+            overflow: hidden;
+        }
+        
+        .hero-visuals:hover .dashboard-container {
+            transform: rotateY(0deg) rotateX(0deg) scale(1.02);
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.9), inset 0 0 20px rgba(37, 99, 235, 0.1);
+        }
+
+        @keyframes floatDashboard {
+            0%, 100% { transform: rotateY(-8deg) rotateX(4deg) translateY(0px); }
+            50% { transform: rotateY(-10deg) rotateX(6deg) translateY(-20px); }
+        }
+
+        /* Dashboard UI Internals */
+        .dash-top-bar {
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #60a5fa;
+        }
+        .dash-dots span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #334155; margin-right: 6px; }
+        .dash-dots span:nth-child(1) { background: #ef4444; }
+        .dash-dots span:nth-child(2) { background: #eab308; }
+        .dash-dots span:nth-child(3) { background: #22c55e; }
+
+        .dash-content {
+            padding: 16px;
+            display: grid;
+            grid-template-columns: 2fr 1.2fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Widget Styles */
+        .widget-card {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 12px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.4s ease;
+        }
+        .widget-card:hover { border-color: rgba(59, 130, 246, 0.4); }
+        
+        .widget-title {
+            font-size: 0.7rem;
+            color: #94a3b8;
             text-transform: uppercase;
-            will-change: transform, opacity, letter-spacing;
-            text-align: center;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            display: flex; justify-content: space-between;
+        }
+        
+        /* Widget 1: Neural Network (Main Left) */
+        .w-neural {
+            grid-row: span 2;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        #neural-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
         }
 
-        @keyframes cinematicReveal {
-            0% { opacity: 0; transform: scale(0.95); letter-spacing: 0.2em; filter: blur(15px); }
-            100% { opacity: 1; transform: scale(1); letter-spacing: -0.04em; filter: blur(0px) drop-shadow(0 0 40px rgba(37, 99, 235, 0.4)); }
+        /* Widget 2: Training Graph (Top Right) */
+        .w-graph { display: flex; align-items: flex-end; gap: 4px; padding-bottom: 0; }
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, #2563eb, #06b6d4);
+            border-radius: 2px 2px 0 0;
+            opacity: 0.8;
+            animation: graphBounce 3s infinite ease-in-out;
+        }
+        @keyframes graphBounce { 0%,100%{height: 20%;} 50%{height: 80%;} }
+
+        /* Widget 3: Logs/Terminal (Bottom Right) */
+        .w-logs { font-family: monospace; font-size: 0.65rem; color: #06b6d4; overflow: hidden; }
+        .log-line {
+            margin-bottom: 4px;
+            opacity: 0;
+            animation: fadeInLog 4s infinite;
+        }
+        .log-line:nth-child(1) { animation-delay: 0s; }
+        .log-line:nth-child(2) { animation-delay: 1s; }
+        .log-line:nth-child(3) { animation-delay: 2s; }
+        .log-line:nth-child(4) { animation-delay: 3s; }
+        @keyframes fadeInLog { 0%{opacity:0; transform:translateY(10px);} 10%{opacity:1; transform:translateY(0);} 80%{opacity:1;} 100%{opacity:0; transform:translateY(-10px);} }
+
+        /* Background Glows for Dashboard */
+        .dash-glow {
+            position: absolute;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            filter: blur(50px);
+            animation: glowPulse 6s infinite alternate;
+        }
+        @keyframes glowPulse { 0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); } }
+
+        /* Orbiting Data Particles around dashboard */
+        .orbit-particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff;
+            top: 50%; left: 50%;
+        }
+        .op-1 { animation: orbit1 12s infinite linear; }
+        .op-2 { animation: orbit2 18s infinite linear; }
+        
+        @keyframes orbit1 {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(340px) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(340px) rotate(-360deg); }
+        }
+        @keyframes orbit2 {
+            0% { transform: translate(-50%, -50%) rotate(180deg) translateX(360px) rotate(-180deg); }
+            100% { transform: translate(-50%, -50%) rotate(540deg) translateX(360px) rotate(-540deg); }
         }
 
-        @keyframes breatheText {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(37, 99, 235, 0.2)); }
-            50% { transform: scale(1.02); filter: drop-shadow(0 0 50px rgba(37, 99, 235, 0.6)); }
-        }
+        /* ========================================= */
 
         /* --- CAPABILITIES CARDS --- */
         .cap-card {
             padding: 24px;
             border-radius: 24px;
-            
-            /* TRANSPARENT BLACK GLASS BASE */
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-
             background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
             background-size: 30px 30px;
-            
             display: flex; flex-direction: column; 
             min-height: 380px; 
-            
-            /* CINEMATIC TRANSITION */
-            transition: all 0.5s var(--anim-cinematic); 
+            /* Cinematic Interaction */
+            transition: all 0.6s var(--ease-cinematic); 
             position: relative; overflow: hidden;
             cursor: pointer;
         }
         @media (min-width: 768px) { .cap-card { padding: 40px; } }
         
-        /* HOVER: Cinematic Pop Up (Remains Dark/Black) */
         .cap-card:hover {
-            /* Make it darker/more opaque black, NOT white */
             background: rgba(0, 0, 0, 0.6); 
-            border-color: rgba(59, 130, 246, 0.5); /* Blue glow border */
-            
-            /* Cinematic Pop */
-            transform: translateY(-12px) scale(1.02); 
+            border-color: rgba(59, 130, 246, 0.5); 
+            transform: translateY(-16px) scale(1.02); 
             box-shadow: 
-                0 30px 60px -12px rgba(0,0,0,0.9), /* Deep dark shadow */
-                0 0 25px rgba(37, 99, 235, 0.15); /* Subtle blue atmospheric glow */
+                0 30px 80px -12px rgba(0,0,0,0.9),
+                0 0 25px rgba(37, 99, 235, 0.15);
         }
-
-        /* ACTIVE: Press Down (No white flash) */
         .cap-card:active {
             transform: scale(0.98) translateY(-4px);
-            background: rgba(0, 0, 0, 0.7);
-            box-shadow: 0 10px 30px -5px rgba(0,0,0,0.9);
+            transition: all 0.2s ease;
         }
 
         .cap-subtitle { font-size: 0.75rem; font-weight: 700; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; display: block; }
         .cap-title { font-size: 2rem; font-weight: 800; color: white; line-height: 1.1; margin-bottom: 20px; letter-spacing: -0.02em; }
         @media(min-width: 768px) { .cap-title { font-size: 2.5rem; } }
-        
         .cap-desc { font-size: 0.95rem; color: #94a3b8; line-height: 1.6; margin-bottom: 24px; z-index: 10; position: relative; }
         @media(min-width: 768px) { .cap-desc { font-size: 1rem; } }
 
@@ -211,7 +523,6 @@
         .cap-card-wide { grid-column: 1 / -1; display: flex; flex-direction: column; }
         .ccw-left { flex: 0 0 40%; display: flex; flex-direction: column; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 30px; margin-bottom: 30px; }
         .ccw-right { flex: 1; display: flex; align-items: center; }
-
         @media (min-width: 1024px) {
             .cap-card-wide { flex-direction: row; align-items: stretch; }
             .ccw-left { border-bottom: none; border-right: 1px solid rgba(255,255,255,0.05); padding-bottom: 0; padding-right: 40px; margin-bottom: 0; }
@@ -221,117 +532,53 @@
         .inner-feature-grid { display: grid; grid-template-columns: 1fr; gap: 16px; width: 100%; }
         @media (min-width: 640px) { .inner-feature-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
         
-        .ifg-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; transition: all 0.3s ease; }
-        .ifg-item:hover { background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.2); transform: translateY(-3px); }
+        .ifg-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; transition: all 0.4s var(--ease-cinematic); }
+        .ifg-item:hover { background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.2); transform: translateY(-5px); }
         .ifg-title { font-size: 0.9rem; font-weight: 700; color: white; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
         .ifg-desc { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; }
 
-
-        /* --- KINETIC ACCORDION STACK (Reduced Glass Effect) --- */
-        .kinetic-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
+        /* --- KINETIC ACCORDION STACK --- */
+        .kinetic-stack { display: flex; flex-direction: column; gap: 12px; max-width: 1000px; margin: 0 auto; }
         .kinetic-item {
-            /* REDUCED GLASS: Transparent Black base */
             background: rgba(0, 0, 0, 0.2); 
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             overflow: hidden;
-            transition: all 0.5s var(--anim-cinematic);
-            backdrop-filter: blur(6px); /* Low blur */
+            transition: all 0.6s var(--ease-cinematic);
+            backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
             position: relative;
-        }
-        
-        .kinetic-item:hover {
-            transform: translateY(-2px);
-            background: rgba(0, 0, 0, 0.3);
-            border-color: rgba(255,255,255,0.1);
-        }
-
-        .kinetic-header {
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            user-select: none;
-            background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent);
-        }
-        
+        }        
+        .kinetic-item:hover { transform: translateY(-3px); background: rgba(0, 0, 0, 0.3); border-color: rgba(255,255,255,0.1); }
+        .kinetic-header { padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent); }        
         .kh-left { display: flex; align-items: center; gap: 16px; }
         .kh-num { font-size: 0.8rem; color: #3b82f6; font-family: monospace; opacity: 0.7; }
         .kh-title { font-size: 1.1rem; font-weight: 700; color: #e2e8f0; transition: color 0.3s; }
         .kh-icon { width: 20px; height: 20px; color: #64748b; transition: transform 0.4s ease, color 0.3s; }
-
         .kinetic-item:hover .kinetic-header { background: rgba(255,255,255,0.02); }
         .kinetic-item:hover .kh-title { color: white; }
-
-        /* Active State for Accordion */
-        .kinetic-item.active {
-            background: rgba(0, 0, 0, 0.5); /* Darker black */
-            border-color: rgba(59, 130, 246, 0.3);
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.1);
-        }
-        
+        .kinetic-item.active { background: rgba(0, 0, 0, 0.5); border-color: rgba(59, 130, 246, 0.3); box-shadow: 0 0 20px rgba(37, 99, 235, 0.1); }        
         .kinetic-item.active .kh-title { color: #3b82f6; }
         .kinetic-item.active .kh-icon { transform: rotate(180deg); color: #3b82f6; }
-
-        .kinetic-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            border-top: 1px solid transparent;
-        }
-
-        .kinetic-item.active .kinetic-body {
-            max-height: 1200px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .kb-inner {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-        @media (min-width: 768px) {
-            .kb-inner { flex-direction: row; padding: 40px; }
-            .kb-content { flex: 1; }
-            .kb-visual { flex: 1; min-height: 300px; }
-        }
-
+        .kinetic-body { max-height: 0; overflow: hidden; transition: max-height 0.8s var(--ease-cinematic); border-top: 1px solid transparent; }
+        .kinetic-item.active .kinetic-body { max-height: 1200px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .kb-inner { padding: 24px; display: flex; flex-direction: column; gap: 30px; }
+        @media (min-width: 768px) { .kb-inner { flex-direction: row; padding: 40px; } .kb-content { flex: 1; } .kb-visual { flex: 1; min-height: 300px; } }
         .swc-desc { font-size: 0.95rem; color: #94a3b8; line-height: 1.6; margin-bottom: 24px; }
         .feature-list li { display: flex; align-items: start; margin-bottom: 10px; color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; }
         .check-icon { margin-right: 12px; margin-top: 4px; flex-shrink: 0; width: 16px; height: 16px; color: #3b82f6; }
         .pill-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-        .pill { font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; background: rgba(30, 58, 138, 0.2); border: 1px solid rgba(59, 130, 246, 0.2); color: #93c5fd; }
-        
-        .kb-visual-container {
-            background: radial-gradient(circle at center, rgba(37, 99, 235, 0.05) 0%, transparent 60%);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 16px;
-            height: 250px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .pill { font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; background: rgba(30, 58, 138, 0.2); border: 1px solid rgba(59, 130, 246, 0.2); color: #93c5fd; }        
+        .kb-visual-container { background: radial-gradient(circle at center, rgba(37, 99, 235, 0.05) 0%, transparent 60%); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; height: 250px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         @media(min-width: 768px) { .kb-visual-container { height: 100%; } }
 
-        /* --- ANIMATIONS --- */
+        /* --- ANIMATIONS (Logic Animations) --- */
         .gyro-container { width: 180px; height: 180px; position: relative; transform-style: preserve-3d; perspective: 600px; display: flex; align-items: center; justify-content: center; }
         .gyro-ring { border: 2px solid rgba(59,130,246,0.4); border-radius: 50%; position: absolute; box-shadow: 0 0 10px rgba(59,130,246,0.1); }
         .gr-1 { width: 100%; height: 100%; animation: rotate1 4s linear infinite; border-color: rgba(59,130,246,0.6); }
         .gr-2 { width: 80%; height: 80%; animation: rotate2 5s linear infinite; border-style: dashed; }
         .gr-3 { width: 60%; height: 60%; animation: rotate3 6s linear infinite; }
-        .gyro-core { width: 30px; height: 30px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 30px #3b82f6; animation: pulseCore 2s infinite ease-in-out; }
+        .gyro-core-small { width: 30px; height: 30px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 30px #3b82f6; animation: pulseCore 2s infinite ease-in-out; }
         @keyframes rotate1 { 0% { transform: rotateX(0deg) rotateY(0deg); } 100% { transform: rotateX(360deg) rotateY(360deg); } }
         @keyframes rotate2 { 0% { transform: rotateX(0deg) rotateY(0deg); } 100% { transform: rotateX(-360deg) rotateY(180deg); } }
         @keyframes rotate3 { 0% { transform: rotateX(60deg) rotateY(0deg); } 100% { transform: rotateX(60deg) rotateY(360deg); } }
@@ -341,18 +588,7 @@
         .logic-gate { width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #64748b; z-index: 2; transition: all 0.2s; }
         .logic-path { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.1); transform: translateY(-50%); z-index: 1; }
         .logic-packet { width: 12px; height: 12px; background: #3b82f6; border-radius: 50%; position: absolute; top: 50%; left: 0; transform: translateY(-50%); box-shadow: 0 0 10px #3b82f6; z-index: 3; animation: packetMove 3s infinite cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes packetMove {
-            0% { left: 0; opacity: 0; }
-            10% { opacity: 1; }
-            30% { left: 40px; }
-            35% { transform: translateY(-50%) scale(1.5); } 
-            40% { transform: translateY(-50%) scale(1); }
-            60% { left: 130px; }
-            65% { transform: translateY(-50%) scale(1.5); }
-            70% { transform: translateY(-50%) scale(1); }
-            90% { left: 210px; opacity: 1; }
-            100% { left: 220px; opacity: 0; }
-        }
+        @keyframes packetMove { 0% { left: 0; opacity: 0; } 10% { opacity: 1; } 30% { left: 40px; } 35% { transform: translateY(-50%) scale(1.5); } 40% { transform: translateY(-50%) scale(1); } 60% { left: 130px; } 65% { transform: translateY(-50%) scale(1.5); } 70% { transform: translateY(-50%) scale(1); } 90% { left: 210px; opacity: 1; } 100% { left: 220px; opacity: 0; } }
         .gate-1 { animation: gateGlow 3s infinite; animation-delay: 0.9s; }
         .gate-2 { animation: gateGlow 3s infinite; animation-delay: 1.8s; }
         .gate-3 { animation: gateGlow 3s infinite; animation-delay: 2.7s; }
@@ -370,23 +606,19 @@
         .id-3 { left: 50%; animation-delay: 1.4s; }
         @keyframes dataRise { 0% { transform: translateZ(0px); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateZ(100px); opacity: 0; } }
 
-        /* --- INDUSTRY SUITES (INTENSIFIED GLASS EFFECT) --- */
+        /* --- INDUSTRY SUITES --- */
         .bento-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
         @media (min-width: 900px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
 
         .suite-card {
-            /* INTENSIFIED GLASS: Transparent Black Base */
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255,255,255,0.15); 
             border-radius: 24px; 
             padding: 24px;
             display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;
-            
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px);
-            
-            transition: all 0.5s var(--anim-cinematic);
-            
+            transition: all 0.6s var(--ease-cinematic);
             background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
             background-size: 24px 24px;
             min-height: 300px;
@@ -394,24 +626,15 @@
         }
         @media(min-width: 768px) { .suite-card { padding: 32px; min-height: 340px; } }
         
-        /* HOVER EFFECT: Cinematic Pop Up (Darker) */
         .suite-card:hover { 
             border-color: rgba(255, 255, 255, 0.3); 
-            
-            /* Cinematic Pop */
-            transform: translateY(-12px) scale(1.02); 
-            background-color: rgba(0, 0, 0, 0.6); /* Darker black */
+            transform: translateY(-16px) scale(1.02); 
+            background-color: rgba(0, 0, 0, 0.6); 
             box-shadow: 
-                0 30px 60px -12px rgba(0,0,0,0.95), /* Heavy dark shadow */
+                0 30px 80px -12px rgba(0,0,0,0.95),
                 0 0 30px rgba(59, 130, 246, 0.2); 
-        }
-        
-        /* ACTIVE EFFECT: Cinematic Press (No White) */
-        .suite-card:active {
-            transform: scale(0.98) translateY(-4px);
-            background-color: rgba(0, 0, 0, 0.7);
-            box-shadow: 0 10px 30px -5px rgba(0,0,0,0.9);
-        }
+        }        
+        .suite-card:active { transform: scale(0.98) translateY(-4px); background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px -5px rgba(0,0,0,0.9); }
 
         .sc-wide { grid-column: span 1; display: flex; flex-direction: column; }
         @media (min-width: 900px) {
@@ -419,38 +642,27 @@
             .sc-wide-content { flex: 1; padding-right: 40px; }
             .sc-wide-visual { flex: 1; height: 100%; min-height: 300px; border-left: 1px solid rgba(255,255,255,0.1); }
         }
-        
-        .sc-wide-visual-mobile { 
-            height: 200px; width: 100%; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 24px; 
-            display: flex; align-items: center; justify-content: center; position: relative;
-        }
+        .sc-wide-visual-mobile { height: 200px; width: 100%; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 24px; display: flex; align-items: center; justify-content: center; position: relative; }
         @media (min-width: 900px) { .sc-wide-visual-mobile { display: none; } }
 
         .sc-tag { font-size: 0.7rem; font-weight: 700; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; display: block; }
         .sc-title { font-size: 1.75rem; font-weight: 700; color: white; margin-bottom: 12px; line-height: 1.1; }
         @media(min-width: 768px) { .sc-title { font-size: 2rem; } }
-        .sc-desc { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; max-width: 95%; }
-        
-        .sc-link { margin-top: auto; display: inline-flex; items-center; font-size: 0.9rem; font-weight: 600; color: white; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 2px; transition: all 0.3s; width: fit-content; }
-        
+        .sc-desc { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; max-width: 95%; }        
+        .sc-link { margin-top: auto; display: inline-flex; items-center; font-size: 0.9rem; font-weight: 600; color: white; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 2px; transition: all 0.3s; width: fit-content; }        
         .sc-icon-corner { position: absolute; top: 24px; right: 24px; color: #3b82f6; opacity: 0.8; }
         @media(min-width: 768px) { .sc-icon-corner { top: 32px; right: 32px; } }
 
-        /* --- CONTACT FORM GLASS STYLE --- */
+        /* --- CONTACT FORM --- */
         .contact-glass {
             background: linear-gradient(135deg, rgba(30, 58, 138, 0.2) 0%, rgba(5, 5, 10, 0.8) 100%);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(59, 130, 246, 0.2);
             box-shadow: 0 20px 60px -10px rgba(37, 99, 235, 0.1);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-        
-        /* HOVER EFFECT: POP UP & SHADOW */
-        .contact-glass:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 70px -10px rgba(37, 99, 235, 0.2);
-        }
+            transition: transform 0.6s var(--ease-cinematic), box-shadow 0.6s var(--ease-cinematic);
+        }        
+        .contact-glass:hover { transform: translateY(-8px); box-shadow: 0 40px 90px -10px rgba(37, 99, 235, 0.25); }
 
         .device-container { width: 240px; height: 160px; position: relative; transform-style: preserve-3d; animation: floatRotate 6s infinite ease-in-out; transform: scale(0.8); }
         @media(min-width: 768px) { .device-container { transform: scale(1); } }
@@ -483,7 +695,7 @@
         .browser-window .screen-scroll { background-size: 100% 20px; background-image: repeating-linear-gradient(0deg, transparent, transparent 18px, rgba(255,255,255,0.05) 19px, rgba(255,255,255,0.05) 20px); }
         .mobile-phone .screen-scroll { animation-duration: 5s; }
 
-        #mobile-menu { transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
+        #mobile-menu { transition: max-height 0.4s var(--ease-cinematic), opacity 0.4s var(--ease-cinematic); max-height: 0; opacity: 0; overflow: hidden; }
         #mobile-menu.active { max-height: 400px; opacity: 1; }
     </style>
 </head>
@@ -493,9 +705,9 @@
 
     <header class="fixed top-0 left-0 right-0 z-50 nav-glass">
         <nav class="container mx-auto px-6 py-4 flex flex-wrap justify-between items-center">
-            <a href="#" class="flex items-center opacity-90 hover:opacity-100 transition z-50">
-                 <img src="logo.png" alt="Zyntraz" style="max-height: 24px; filter: brightness(0) invert(1);">
-            </a>
+            <a href="#" class="flex items-center opacity-90 hover:opacity-100 transition z-50"> 
+                 <img src="https://github.com/zyntraxz2-byte/logo/blob/main/logo.png?raw=true" alt="Zyntraz" style="max-height: 33px;">
+                </a>
             
             <div class="hidden md:flex space-x-8 lg:space-x-10 items-center">
                 <a href="#home" class="nav-link">Home</a>
@@ -526,27 +738,93 @@
     <main>
 
         <section id="home" class="hero-section">
-            <div class="container mx-auto px-4 sm:px-6 relative z-10 text-center">
-                <p class="text-blue-500 font-bold tracking-[0.2em] md:tracking-[0.3em] text-xs md:text-sm uppercase mb-4" data-aos="fade-down">Intelligent Engineering</p>
-                <h1 class="hero-big-text mb-6">ZYNTRAZ</h1>
-                <p class="text-lg md:text-2xl text-gray-400 max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed px-4" data-aos="fade-up" data-aos-delay="500">
-                    Igniting Innovation. Empowering Evolution.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center px-6" data-aos="fade-up" data-aos-delay="700">
-                    <a href="#services-deep" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 md:py-4 px-8 md:px-10 rounded-full text-base md:text-lg shadow-lg shadow-blue-900/40 hover:scale-105 transition w-full sm:w-auto text-center">Explore Services</a>
+            
+            <div class="hero-container">
+                
+                <div class="hero-content">
+                    <div class="hero-tagline">
+                        INTELLIGENT ENGINEERING
+                    </div>
+                    <h1 class="hero-title">ZYNTRAZ</h1>
+                    <p class="hero-desc">
+                        Igniting Innovation. Empowering Evolution. Building the neural infrastructure for the next generation of intelligent enterprise.
+                    </p>
+                    <div class="hero-btns-container">
+                        <a href="#services-deep" class="hero-btn">
+                            Explore Services
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                        <a href="#contact" class="hero-btn-outline">
+                            Contact Us
+                        </a>
+                    </div>
                 </div>
+
+                <div class="hero-visuals">
+                    
+                    <div class="orbit-particle op-1"></div>
+                    <div class="orbit-particle op-2"></div>
+                    <div class="dash-glow"></div>
+
+                    <div class="dashboard-container">
+                        <div class="dash-top-bar">
+                            <div class="dash-dots"><span></span><span></span><span></span></div>
+                            <div class="tracking-widest">ZYNTRAZ_AI_CORE // LIVE</div>
+                            <div>V.4.0.1</div>
+                        </div>
+
+                        <div class="dash-content">
+                            
+                            <div class="widget-card w-neural">
+                                <div class="widget-title">
+                                    <span>NEURAL TOPOLOGY</span>
+                                    <span class="text-green-400">ONLINE</span>
+                                </div>
+                                <div class="neural-canvas">
+                                    <canvas id="neural-canvas"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="widget-card w-graph-container">
+                                <div class="widget-title">
+                                    <span>MODEL ACCURACY</span>
+                                    <span class="text-blue-400">98.4%</span>
+                                </div>
+                                <div class="w-graph h-full">
+                                    <div class="bar" style="animation-delay:0s"></div>
+                                    <div class="bar" style="animation-delay:0.2s"></div>
+                                    <div class="bar" style="animation-delay:0.4s"></div>
+                                    <div class="bar" style="animation-delay:0.6s"></div>
+                                    <div class="bar" style="animation-delay:0.8s"></div>
+                                </div>
+                            </div>
+
+                            <div class="widget-card w-logs">
+                                <div class="widget-title">
+                                    <span>INFERENCE LOGS</span>
+                                </div>
+                                <div class="log-line">> INIT_SEQUENCE_START</div>
+                                <div class="log-line">> LOADING_WEIGHTS... OK</div>
+                                <div class="log-line">> CONNECTING_TO_EDGE_NODE</div>
+                                <div class="log-line">> OPTIMIZING_TENSORS</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
-
+        
         <section id="capabilities" class="py-20 md:py-32">
             <div class="container mx-auto px-6">
-                <div class="text-center mb-16" data-aos="fade-up">
+                <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1200">
                     <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Core Capabilities.</h2>
                     <p class="text-gray-400">Precision. Scale. Intelligence.</p>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-6">
-                    <div class="cap-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="cap-card" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="0">
                         <span class="cap-subtitle">ARTIFICIAL INTELLIGENCE</span>
                         <h3 class="cap-title">Neural Power.</h3>
                         <p class="cap-desc">Deploy custom models for computer vision, predictive maintenance, and NLP chatbots.</p>
@@ -555,7 +833,7 @@
                         </div>
                     </div>
                     
-                    <div class="cap-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="cap-card" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="150">
                         <span class="cap-subtitle">IOT & SENSORS</span>
                         <h3 class="cap-title">Total Connectivity.</h3>
                         <p class="cap-desc">Digital twins, smart meters, and real-time sensor networks bridging the physical gap.</p>
@@ -564,7 +842,7 @@
                         </div>
                     </div>
 
-                    <div class="cap-card cap-card-wide" data-aos="fade-up" data-aos-delay="200">
+                    <div class="cap-card cap-card-wide" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="300">
                         <div class="ccw-left">
                             <span class="cap-subtitle">SOFTWARE PLATFORMS</span>
                             <h3 class="cap-title">Scale without limits.</h3>
@@ -601,12 +879,12 @@
 
         <section id="services-deep" class="py-20 md:py-32">
             <div class="container mx-auto px-4 md:px-6">
-                <div class="text-center mb-16">
+                <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1000"> 
                      <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Deep Dive Services.</h2>
                      <p class="text-lg md:text-xl text-gray-400">Comprehensive technical solutions arranged for clarity.</p>
                 </div>
 
-                <div class="kinetic-stack" id="kineticStack" data-aos="fade-up">
+                <div class="kinetic-stack" id="kineticStack" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="200">
                     
                     <div class="kinetic-item active">
                         <div class="kinetic-header" onclick="toggleKinetic(this)">
@@ -634,7 +912,7 @@
                                             <div class="gyro-ring gr-1"></div>
                                             <div class="gyro-ring gr-2"></div>
                                             <div class="gyro-ring gr-3"></div>
-                                            <div class="gyro-core"></div>
+                                            <div class="gyro-core-small"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -792,7 +1070,7 @@
 
                 <div class="bento-grid">
                     
-                    <div class="suite-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="suite-card" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="0">
                         <svg class="sc-icon-corner w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                         <div>
                             <span class="sc-tag">Retail & Hospitality</span>
@@ -802,7 +1080,7 @@
                         <a href="#contact" class="sc-link">COMING SOON</a> &rarr;</a>
                     </div>
 
-                    <div class="suite-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="suite-card" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="150">
                         <svg class="sc-icon-corner w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
                         <div>
                             <span class="sc-tag">Analytics</span>
@@ -812,7 +1090,7 @@
                         <a href="https://forecaster.zyntraz.com/" class="sc-link">VISIT &rarr;</a>
                     </div>
 
-                    <div class="suite-card sc-wide" data-aos="fade-up" data-aos-delay="200">
+                    <div class="suite-card sc-wide" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="300">
                         <div class="sc-wide-content">
                             <span class="sc-tag">AI Growth Tool</span>
                             <h4 class="sc-title">Lead Classification AI</h4>
@@ -854,7 +1132,7 @@
                         <input type="tel" placeholder="Contact Number" class="w-full bg-black/40 border border-gray-700/50 p-4 rounded-lg text-white focus:border-blue-600 outline-none transition">
                         
                         <textarea rows="4" placeholder="Tell us about your project..." class="w-full bg-black/40 border border-gray-700/50 p-4 rounded-lg text-white focus:border-blue-600 outline-none transition"></textarea>
-                        <button class="bg-blue-600 text-white font-bold py-4 rounded-lg hover:bg-blue-700 transition w-full shadow-lg shadow-blue-600/30">Send Message</button>
+                        <button class="hero-btn w-full justify-center shadow-lg shadow-blue-600/30">Send Message</button>
                     </form>
                     <div class="mt-8 flex flex-col md:flex-row justify-center gap-4 md:gap-8 text-gray-400 text-sm text-center">
                         <span class="flex items-center gap-2 justify-center"><svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg> info@zyntraz.com</span>
@@ -866,7 +1144,7 @@
 
         <footer class="py-16 text-center relative z-10 bg-transparent">
             <div class="container mx-auto px-6">
-                <img src="logo.png" alt="Zyntraz" style="max-width: 180px; margin: 0 auto 16px; display: block; filter: brightness(0) invert(1);">
+                <img src="https://github.com/zyntraxz2-byte/logo/blob/main/logo.png?raw=true" alt="Zyntraz" style="max-width: 210px; margin: 0 auto 16px; display: block;">
                 
                 <div style="color: white; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 30px; opacity: 0.9;">
                     IGNITING INNOVATION. EMPOWERING EVOLUTION.
@@ -890,7 +1168,14 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 800, once: true });
+        // Cinematic AOS Settings
+        AOS.init({ 
+            duration: 1200, 
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 100
+        });
+        
         document.getElementById('year').textContent = new Date().getFullYear();
 
         // Mobile Menu Toggle
@@ -903,7 +1188,7 @@
 
         menuBtn.addEventListener('click', toggleMenu);
 
-        // --- NEW KINETIC ACCORDION LOGIC ---
+        // --- KINETIC ACCORDION LOGIC ---
         function toggleKinetic(headerElement) {
             const item = headerElement.parentElement;
             
@@ -920,7 +1205,7 @@
             }
         }
 
-        // Canvas Particle Network Animation
+        // --- GLOBAL CANVAS PARTICLES ---
         const canvas = document.getElementById('global-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, particles = [];
@@ -942,8 +1227,8 @@
             constructor() { 
                 this.x = Math.random() * width; 
                 this.y = Math.random() * height; 
-                this.vx = (Math.random() - 0.5) * 0.5; 
-                this.vy = (Math.random() - 0.5) * 0.5; 
+                this.vx = (Math.random() - 0.5) * 0.3; /* Slower cinematic movement */
+                this.vy = (Math.random() - 0.5) * 0.3; 
                 this.size = Math.random() * 2; 
             }
             update() { 
@@ -958,8 +1243,8 @@
                         const forceDirectionX = dx / distance;
                         const forceDirectionY = dy / distance;
                         const force = (150 - distance) / 150;
-                        this.x -= forceDirectionX * force * 2;
-                        this.y -= forceDirectionY * force * 2;
+                        this.x -= forceDirectionX * force * 1.5;
+                        this.y -= forceDirectionY * force * 1.5;
                     }
                 }
 
@@ -976,7 +1261,7 @@
 
         function initParticles() { 
             particles = []; 
-            for(let i=0; i<60; i++) particles.push(new Particle()); 
+            for(let i=0; i<50; i++) particles.push(new Particle()); 
         }
 
         function animate() {
@@ -1002,6 +1287,146 @@
 
         resize(); 
         animate();
+
+        // --- IMPROVED NEURAL TOPOLOGY ANIMATION (Widget Canvas) ---
+        (function() {
+            const neuralCanvas = document.getElementById('neural-canvas');
+            const nCtx = neuralCanvas.getContext('2d');
+            let nWidth, nHeight;
+            let nodes = [];
+            
+            function resizeNeural() {
+                // Get parent size
+                const rect = neuralCanvas.parentElement.getBoundingClientRect();
+                nWidth = neuralCanvas.width = rect.width;
+                nHeight = neuralCanvas.height = rect.height;
+                initNodes();
+            }
+
+            class Node {
+                constructor() {
+                    this.x = Math.random() * nWidth;
+                    this.y = Math.random() * nHeight;
+                    this.vx = (Math.random() - 0.5) * 0.8; 
+                    this.vy = (Math.random() - 0.5) * 0.8;
+                    this.pulse = 0;
+                    this.pulseSpeed = Math.random() * 0.05 + 0.02;
+                    this.isFiring = false;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    // Bounce
+                    if (this.x < 0 || this.x > nWidth) this.vx *= -1;
+                    if (this.y < 0 || this.y > nHeight) this.vy *= -1;
+                    
+                    this.pulse += this.pulseSpeed;
+                    
+                    // Random firing trigger
+                    if (!this.isFiring && Math.random() < 0.01) {
+                        this.isFiring = true;
+                        this.fireProgress = 0;
+                    }
+                }
+                draw() {
+                    const alpha = 0.5 + Math.sin(this.pulse) * 0.3;
+                    nCtx.fillStyle = `rgba(59, 130, 246, ${alpha})`;
+                    nCtx.beginPath();
+                    nCtx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                    nCtx.fill();
+                    
+                    if (this.isFiring) {
+                        nCtx.fillStyle = `rgba(255, 255, 255, ${1 - this.fireProgress})`;
+                        nCtx.beginPath();
+                        nCtx.arc(this.x, this.y, 3 + this.fireProgress * 10, 0, Math.PI * 2);
+                        nCtx.fill();
+                        this.fireProgress += 0.05;
+                        if(this.fireProgress > 1) this.isFiring = false;
+                    }
+                }
+            }
+
+            // Signals travelling between nodes
+            let signals = [];
+
+            class Signal {
+                constructor(startNode, endNode) {
+                    this.start = startNode;
+                    this.end = endNode;
+                    this.progress = 0;
+                    this.speed = 0.05;
+                    this.dead = false;
+                }
+                update() {
+                    this.progress += this.speed;
+                    if (this.progress >= 1) this.dead = true;
+                }
+                draw() {
+                    const lx = this.start.x + (this.end.x - this.start.x) * this.progress;
+                    const ly = this.start.y + (this.end.y - this.start.y) * this.progress;
+                    nCtx.fillStyle = '#06b6d4'; // Cyan packet
+                    nCtx.beginPath();
+                    nCtx.arc(lx, ly, 2, 0, Math.PI*2);
+                    nCtx.fill();
+                    // trail
+                    nCtx.shadowBlur = 10;
+                    nCtx.shadowColor = '#06b6d4';
+                    nCtx.fill();
+                    nCtx.shadowBlur = 0;
+                }
+            }
+
+            function initNodes() {
+                nodes = [];
+                for(let i=0; i<15; i++) {
+                    nodes.push(new Node());
+                }
+            }
+
+            function animateNeural() {
+                nCtx.clearRect(0, 0, nWidth, nHeight);
+                
+                // Draw Connections
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        let dx = nodes[i].x - nodes[j].x;
+                        let dy = nodes[i].y - nodes[j].y;
+                        let dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < 100) {
+                            nCtx.strokeStyle = `rgba(59, 130, 246, ${0.4 * (1 - dist/100)})`;
+                            nCtx.lineWidth = 1;
+                            nCtx.beginPath();
+                            nCtx.moveTo(nodes[i].x, nodes[i].y);
+                            nCtx.lineTo(nodes[j].x, nodes[j].y);
+                            nCtx.stroke();
+                            
+                            // Randomly spawn signal
+                            if (Math.random() < 0.005) {
+                                signals.push(new Signal(nodes[i], nodes[j]));
+                            }
+                        }
+                    }
+                    nodes[i].update();
+                    nodes[i].draw();
+                }
+
+                // Draw Signals
+                for (let i = signals.length - 1; i >= 0; i--) {
+                    signals[i].update();
+                    signals[i].draw();
+                    if (signals[i].dead) signals.splice(i, 1);
+                }
+
+                requestAnimationFrame(animateNeural);
+            }
+            
+            // Wait for DOM
+            setTimeout(() => {
+                resizeNeural();
+                animateNeural();
+            }, 500);
+            window.addEventListener('resize', resizeNeural);
+        })();
     </script>
 </body>
 </html>
