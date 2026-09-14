@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const HEADINGS = ".h-hero[data-reveal], .h-xl[data-reveal], .h-lg[data-reveal], .final-title[data-reveal]";
 const TILT = ".card, .glass, .deploy li";
-const MAGNETIC = ".btn-primary.btn-lg, .gnav-cta, .lnav-cta";
+const MAGNETIC = ".btn-primary.btn-lg, .gnav-cta";
 
 // Site-wide GSAP layer, rebuilt for every page.
 export default function Motion() {

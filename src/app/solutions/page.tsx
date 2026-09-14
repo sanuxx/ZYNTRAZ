@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import LocalNav from "@/components/layout/LocalNav";
 import PageHero from "@/components/layout/PageHero";
 import CTABand from "@/components/layout/CTABand";
 import PainPoints from "@/components/sections/PainPoints";
@@ -14,10 +13,6 @@ export const metadata: Metadata = {
 export default function SolutionsPage() {
   return (
     <div className="page">
-      <LocalNav title="Solutions" links={[
-        { label: "Problems", href: "#problems" }, { label: "Calculator", href: "#calculator" },
-        { label: "Fixes", href: "#solutions" }, { label: "Industries", href: "#industries" },
-      ]} />
       <PageHero
         eyebrow="Solutions"
         title={<>Every problem<br /><span className="grad-text">has a system.</span></>}

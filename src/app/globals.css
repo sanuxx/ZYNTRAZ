@@ -10,7 +10,6 @@
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --radius: 28px;
   --nav-h: 48px;
-  --lnav-h: 52px;
 
   --bg: #ffffff;
   --bg-alt: #f5f5f7;
@@ -70,7 +69,7 @@
   h1, h2, h3, h4 { margin: 0; letter-spacing: -0.03em; line-height: 1.07; font-weight: 700; }
   p { margin: 0; }
   a { color: inherit; }
-  [id] { scroll-margin-top: calc(var(--nav-h) + var(--lnav-h)); }
+  [id] { scroll-margin-top: var(--nav-h); }
 }
 
 /* ───────── Primitives ───────── */
@@ -211,23 +210,8 @@ html.nav-hidden .gnav { transform: translateY(-100%); }
   .gnav-burger { display: block; }
 }
 
-/* ───────── Local nav ───────── */
+/* ───────── Inner pages ───────── */
 .page { padding-top: var(--nav-h); }
-.lnav {
-  position: sticky; top: var(--nav-h); z-index: 50; height: var(--lnav-h);
-  background: rgba(255,255,255,.92); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid var(--line); color: var(--text);
-}
-.lnav.dark { background: rgba(0,0,0,.85); }
-.lnav { transition: top .5s var(--ease); }
-html.nav-hidden .lnav { top: 0; }
-.lnav-row { max-width: 1024px; height: 100%; margin: 0 auto; padding-inline: 22px; display: flex; align-items: center; gap: 24px; }
-.lnav-title { font-size: 21px; font-weight: 600; letter-spacing: -0.02em; margin-right: auto; white-space: nowrap; }
-.lnav-links { display: flex; gap: 24px; }
-.lnav-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
-.lnav-links a:hover { color: var(--link); }
-.lnav-cta { font-size: 12px; color: #fff; background: var(--blue); padding: 5px 12px; border-radius: 980px; text-decoration: none; white-space: nowrap; }
-@media (max-width: 640px) { .lnav-links { display: none; } .lnav-title { font-size: 19px; } }
 
 /* ───────── Page hero ───────── */
 .phero { position: relative; overflow: hidden; padding-block: clamp(72px, 10vw, 130px) clamp(64px, 8vw, 110px); text-align: center; }

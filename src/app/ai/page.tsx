@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import LocalNav from "@/components/layout/LocalNav";
 import PageHero from "@/components/layout/PageHero";
 import CTABand from "@/components/layout/CTABand";
 import OrbVisual from "@/components/3d/OrbVisual";
@@ -13,10 +12,6 @@ export const metadata: Metadata = {
 export default function AIPage() {
   return (
     <div className="page dark">
-      <LocalNav dark title="Zyntraz AI" links={[
-        { label: "Demo", href: "#demo" }, { label: "Capabilities", href: "#capabilities" },
-        { label: "Trust", href: "#trust" }, { label: "Deploy", href: "#deploy" },
-      ]} />
       <PageHero
         dark
         eyebrow="Zyntraz AI"

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import LocalNav from "@/components/layout/LocalNav";
 import PageHero from "@/components/layout/PageHero";
 import CTABand from "@/components/layout/CTABand";
 import ProductShowcase from "@/components/sections/Products";
@@ -12,10 +11,6 @@ export const metadata: Metadata = {
 export default function ProductsPage() {
   return (
     <div className="page">
-      <LocalNav title="Products" links={[
-        { label: "ZynRest", href: "#zynrest" }, { label: "ZynStay", href: "#zynstay" },
-        { label: "ZynDesk", href: "#zyndesk" }, { label: "ZynCRM", href: "#zyncrm" },
-      ]} />
       <PageHero
         eyebrow="Zyntraz Platforms"
         title={<>Platforms,<br /><span className="grad-text">ready to run.</span></>}

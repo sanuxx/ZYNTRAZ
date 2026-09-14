@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import LocalNav from "@/components/layout/LocalNav";
 import PageHero from "@/components/layout/PageHero";
 import CTABand from "@/components/layout/CTABand";
 import Services from "@/components/sections/Services";
@@ -14,9 +13,6 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
   return (
     <div className="page">
-      <LocalNav title="Services" links={[
-        { label: "Capabilities", href: "#services" }, { label: "Process", href: "#process" }, { label: "Technology", href: "#tech" },
-      ]} />
       <PageHero
         eyebrow="Services"
         title={<>Engineering,<br /><span className="grad-text">end to end.</span></>}
