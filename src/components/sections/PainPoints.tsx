@@ -89,7 +89,7 @@ function Calculator() {
 
 export default function PainPoints() {
   return (
-    <section className="section dark pain" id="problems">
+    <section className="section pain" id="problems">
       <div className="container">
         <div className="section-head">
           <span className="eyebrow pain" data-reveal>Sound familiar?</span>

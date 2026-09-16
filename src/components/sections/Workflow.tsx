@@ -41,7 +41,7 @@ export default function Workflow() {
   }, []);
 
   return (
-    <section ref={ref} className="process dark" id="process">
+    <section ref={ref} className="process" id="process">
       <div className="process-pin">
         <div className="container">
           <div className="section-head" style={{ marginBottom: 48 }}>

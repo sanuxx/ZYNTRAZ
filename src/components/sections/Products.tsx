@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { AlertCircle, CheckCircle2, ChevronRight, Coffee, LayoutGrid, Pizza } from "lucide-react";
+import { Coffee, LayoutGrid, Pizza } from "lucide-react";
 
 function MockupHeader({ url }: { url: string }) {
   return (
@@ -115,64 +114,55 @@ export function ZynCRMMockup() {
   );
 }
 
-export const products = [
+// Callout anchors are percentages of the mockup box, pointing at the part of the UI they describe.
+export type Callout = { x: number; y: number; label: string };
+
+export const products: {
+  id: string; name: string; category: string; tagline: string; accent: string; mockup: React.ReactNode;
+  pain: string; desc: string; features: string[]; ai: string; callouts: Callout[];
+}[] = [
   {
-    id: "zynrest", name: "ZynRest", category: "Restaurant Management", tagline: "Every order. Every table. One system.", mockup: <ZynRestMockup />,
+    id: "zynrest", name: "ZynRest", category: "Restaurant Management", tagline: "Every order. Every table. One system.", accent: "#0b5cff", mockup: <ZynRestMockup />,
     pain: "Wrong orders, wasted stock and no idea which dishes actually make money?",
     desc: "An intelligent platform designed to manage restaurant operations, orders, inventory, and analytics from one unified dashboard.",
     features: ["Multi-terminal POS", "Live KDS system", "Real-time inventory", "Dynamic QR menus", "Staff shift tracking", "Recipe cost engine"],
     ai: "AI-ready: add a Zyntraz agent for demand forecasting and automatic reorders",
+    callouts: [
+      { x: 36, y: 36, label: "Multi-terminal POS" }, { x: 4, y: 22, label: "Menu categories" },
+      { x: 80, y: 20, label: "Live order ticket" }, { x: 80, y: 90, label: "One-tap charge" },
+    ],
   },
   {
-    id: "zynstay", name: "ZynStay", category: "Hospitality Platform", tagline: "Fuller rooms. Happier guests.", mockup: <ZynStayMockup />,
+    id: "zynstay", name: "ZynStay", category: "Hospitality Platform", tagline: "Fuller rooms. Happier guests.", accent: "#4f46e5", mockup: <ZynStayMockup />,
     pain: "Double bookings, empty rooms and housekeeping chaos?",
     desc: "A comprehensive hospitality management platform for hotels, resorts, and event venues to streamline guest experiences.",
     features: ["Centralized booking", "Event & banquet", "Housekeeping logic", "Dynamic pricing", "Channel sync", "Revenue forecasting"],
     ai: "AI-ready: add a booking agent that answers guests on WhatsApp",
+    callouts: [
+      { x: 18, y: 24, label: "Live occupancy" }, { x: 50, y: 24, label: "Revenue per room" },
+      { x: 55, y: 60, label: "Visual booking timeline" }, { x: 22, y: 76, label: "Housekeeping & maintenance" },
+    ],
   },
   {
-    id: "zyndesk", name: "ZynDesk", category: "Support & Ticketing", tagline: "Support that never sleeps.", mockup: <ZynDeskMockup />,
+    id: "zyndesk", name: "ZynDesk", category: "Support & Ticketing", tagline: "Support that never sleeps.", accent: "#7c3aed", mockup: <ZynDeskMockup />,
     pain: "Customer complaints lost in inboxes and nobody owning the fix?",
     desc: "A powerful helpdesk system to manage customer support operations efficiently — every ticket tracked, prioritised and resolved on time.",
     features: ["SLA ticket tracking", "Omni-channel inboxes", "AI ticket triage", "Self-serve knowledge base"],
     ai: "AI triage and suggested replies on every ticket",
+    callouts: [
+      { x: 16, y: 22, label: "SLA-tracked tickets" }, { x: 64, y: 17, label: "AI triage" },
+      { x: 50, y: 32, label: "Omni-channel inbox" }, { x: 84, y: 43, label: "Fast agent replies" },
+    ],
   },
   {
-    id: "zyncrm", name: "ZynCRM", category: "Customer Relationship", tagline: "No lead left behind.", mockup: <ZynCRMMockup />,
+    id: "zyncrm", name: "ZynCRM", category: "Customer Relationship", tagline: "No lead left behind.", accent: "#0891b2", mockup: <ZynCRMMockup />,
     pain: "Leads going cold because nobody followed up?",
     desc: "A smart CRM system designed to manage leads, track sales pipelines, and improve growth.",
     features: ["Visual pipeline tracking", "Follow-up automation", "Predictive lead scoring", "Invoice & quote generator"],
     ai: "Predictive lead scoring and automated follow-ups",
+    callouts: [
+      { x: 18, y: 22, label: "Visual pipeline" }, { x: 52, y: 32, label: "Deal values at a glance" },
+      { x: 84, y: 22, label: "Closed-won tracking" }, { x: 52, y: 62, label: "Follow-up automation" },
+    ],
   },
 ];
-
-export default function ProductShowcase() {
-  return (
-    <>
-      {products.map((p, i) => (
-        <section key={p.id} id={p.id} className={`pshow${i % 2 ? " dark" : " alt"}`}>
-          <div className="container pshow-head">
-            <p className="pshow-cat" data-reveal>{p.category}</p>
-            <h2 className="h-xl" data-reveal style={{ ["--d" as string]: ".06s" }}>{p.name}</h2>
-            <p className="pshow-tag" data-reveal style={{ ["--d" as string]: ".12s" }}>{p.tagline}</p>
-            <div className="cta-row" data-reveal style={{ ["--d" as string]: ".18s" }}>
-              <Link href="/contact" className="btn btn-primary">Book a {p.name} demo</Link>
-              <a href={`#${p.id}-details`} className="link-chev">Learn more <ChevronRight size={18} /></a>
-            </div>
-          </div>
-          <div className="container pshow-visual" data-reveal>{p.mockup}</div>
-          <div className="container pshow-body" id={`${p.id}-details`}>
-            <div data-reveal>
-              <p className="pshow-pain"><AlertCircle size={18} /> {p.pain}</p>
-              <p className="lede">{p.desc}</p>
-              <p className="pshow-ai"><span>AI</span> {p.ai}</p>
-            </div>
-            <ul className="pshow-feats" data-reveal style={{ ["--d" as string]: ".1s" }}>
-              {p.features.map((f) => <li key={f}><CheckCircle2 size={18} /> {f}</li>)}
-            </ul>
-          </div>
-        </section>
-      ))}
-    </>
-  );
-}

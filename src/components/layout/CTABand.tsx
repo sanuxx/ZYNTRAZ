@@ -7,7 +7,7 @@ type Props = { title?: React.ReactNode; lede?: string; dark?: boolean };
 export default function CTABand({
   title = <>Ready to build your <span className="grad-text">AI workforce?</span></>,
   lede = "Free consultation, no commitment. We'll map where AI and automation will pay off first — and outline a clear roadmap.",
-  dark = true,
+  dark = false,
 }: Props) {
   return (
     <section className={`ctaband${dark ? " dark" : ""}`}>

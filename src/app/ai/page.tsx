@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import PageHero from "@/components/layout/PageHero";
 import CTABand from "@/components/layout/CTABand";
 import OrbVisual from "@/components/3d/OrbVisual";
-import { AgentDemo, AICapabilities, AIDeploy, AITrust, ChatbotVsAgent } from "@/components/sections/AgenticAI";
+import { AgentDemo, AIDeploy, AITrust, ChatbotVsAgent } from "@/components/sections/AgenticAI";
+import CapabilityStack from "@/components/ai/CapabilityStack";
 
 export const metadata: Metadata = {
   title: "Agentic AI for business",
@@ -11,9 +12,8 @@ export const metadata: Metadata = {
 
 export default function AIPage() {
   return (
-    <div className="page dark">
+    <div className="page">
       <PageHero
-        dark
         eyebrow="Zyntraz AI"
         title={<>AI that doesn&apos;t just talk.<br /><span className="grad-text">It works.</span></>}
         lede={<>We design, build and deploy AI agents that understand requests, reason through the steps and <strong>take action across your systems</strong> — around the clock, with your team in control.</>}
@@ -23,7 +23,7 @@ export default function AIPage() {
         <OrbVisual />
       </PageHero>
 
-      <section className="section dark" id="demo">
+      <section className="section" id="demo">
         <div className="container">
           <div className="section-head center">
             <p className="eyebrow" data-reveal>Live example</p>
@@ -38,17 +38,9 @@ export default function AIPage() {
         </div>
       </section>
 
-      <section className="section dark alt" id="capabilities">
-        <div className="container">
-          <div className="section-head">
-            <p className="eyebrow" data-reveal>Capabilities</p>
-            <h2 className="h-xl" data-reveal style={{ ["--d" as string]: ".08s" }}>One team. <span className="dim">Every kind of AI.</span></h2>
-          </div>
-          <AICapabilities />
-        </div>
-      </section>
+      <CapabilityStack />
 
-      <section className="section dark" id="trust">
+      <section className="section" id="trust">
         <div className="container">
           <div className="section-head">
             <p className="eyebrow" data-reveal>Trust &amp; safety</p>
@@ -61,7 +53,7 @@ export default function AIPage() {
         </div>
       </section>
 
-      <section className="section dark alt" id="deploy">
+      <section className="section alt" id="deploy">
         <div className="container">
           <div className="section-head">
             <p className="eyebrow" data-reveal>How we deploy AI</p>

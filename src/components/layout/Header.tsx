@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BASE_PATH } from "@/lib/site";
 
 export const navLinks = [
   { label: "AI", href: "/ai" },
   { label: "Products", href: "/products" },
-  { label: "Solutions", href: "/solutions" },
   { label: "Services", href: "/services" },
+  { label: "Use cases", href: "/solutions" },
   { label: "Company", href: "/company" },
   { label: "Contact", href: "/contact" },
 ];
@@ -34,7 +35,7 @@ export default function Header() {
       <header className={`gnav${open ? " is-open" : ""}`}>
         <div className="gnav-row">
           <Link href="/" className="gnav-logo" aria-label="Zyntraz home" onClick={close}>
-            <Image src="/zyntraz-logo-white.png" alt="Zyntraz" width={894} height={174} priority />
+            <Image src={`${BASE_PATH}/zyntraz-logo-white.png`} alt="Zyntraz" width={894} height={174} priority />
           </Link>
           <nav className="gnav-links" aria-label="Primary">
             {navLinks.map((l) => (

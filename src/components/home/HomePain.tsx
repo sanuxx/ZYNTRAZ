@@ -9,7 +9,7 @@ const pains = [
 
 export default function HomePain() {
   return (
-    <section className="section dark hpain">
+    <section className="section alt hpain">
       <div className="container">
         <div className="section-head center">
           <p className="eyebrow pain" data-reveal>Sound familiar?</p>

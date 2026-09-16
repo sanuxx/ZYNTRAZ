@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { isLowPower, prefersReducedMotion } from "@/lib/device";
 
 export type OrbState = { intensity: number; hue: number; speed: number; mx: number; my: number; warp: number };
 
@@ -59,13 +60,14 @@ void main(){
 }`;
 
 const fragmentShader = /* glsl */ `
-uniform float uHue; uniform float uIntensity;
+uniform float uHue; uniform float uIntensity; uniform float uLight;
 varying vec3 vNormal; varying vec3 vView; varying float vDisp;
 void main(){
   vec3 N = normalize(vNormal); vec3 V = normalize(vView);
   float fres = pow(1.0 - max(dot(N, V), 0.0), 2.3);
-  vec3 deep = vec3(0.005, 0.03, 0.18);
-  vec3 blue = vec3(0.06, 0.28, 1.0);
+  // uLight = 1 brightens the body for light backgrounds.
+  vec3 deep = mix(vec3(0.005, 0.03, 0.18), vec3(0.04, 0.2, 0.72), uLight);
+  vec3 blue = mix(vec3(0.06, 0.28, 1.0), vec3(0.32, 0.6, 1.0), uLight);
   vec3 cyan = vec3(0.3, 0.88, 1.0);
   vec3 violet = vec3(0.62, 0.38, 1.0);
   float k = smoothstep(-0.22, 0.32, vDisp);
@@ -77,14 +79,15 @@ void main(){
   float diff = max(dot(N, L), 0.0);
   float spec = pow(max(dot(N, normalize(L + V)), 0.0), 60.0);
   vec3 col = base * (0.3 + 0.7 * diff) + rim * fres * (1.1 + 0.9 * uIntensity) + irid * fres * 0.55 + spec * 0.7;
+  col += uLight * 0.06;
   gl_FragColor = vec4(col, 1.0);
 }`;
 
-function Blob({ state }: { state: React.RefObject<OrbState> }) {
+function Blob({ state, detail, light }: { state: React.RefObject<OrbState>; detail: number; light: boolean }) {
   const group = useRef<THREE.Group>(null);
   const mesh = useRef<THREE.Mesh>(null);
   const mat = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({ uTime: { value: 0 }, uIntensity: { value: 0 }, uHue: { value: 0 } }), []);
+  const uniforms = useMemo(() => ({ uTime: { value: 0 }, uIntensity: { value: 0 }, uHue: { value: 0 }, uLight: { value: light ? 1 : 0 } }), [light]);
 
   useFrame((_, dt) => {
     const s = state.current;
@@ -102,19 +105,21 @@ function Blob({ state }: { state: React.RefObject<OrbState> }) {
   return (
     <group ref={group}>
       <mesh ref={mesh}>
-        <icosahedronGeometry args={[1, 64]} />
+        <icosahedronGeometry args={[1, detail]} />
         <shaderMaterial ref={mat} vertexShader={vertexShader} fragmentShader={fragmentShader} uniforms={uniforms} />
       </mesh>
     </group>
   );
 }
 
-export default function Orb({ state, cameraZ = 4.6 }: { state: React.RefObject<OrbState>; cameraZ?: number }) {
+export default function Orb({ state, cameraZ = 4.6, light = false }: { state: React.RefObject<OrbState>; cameraZ?: number; light?: boolean }) {
   const wrap = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
   const [webgl] = useState(() => {
     try { return !!document.createElement("canvas").getContext("webgl2"); } catch { return false; }
   });
+  const [low] = useState(isLowPower);
+  const [still] = useState(prefersReducedMotion);
 
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting));
@@ -126,8 +131,8 @@ export default function Orb({ state, cameraZ = 4.6 }: { state: React.RefObject<O
     <div ref={wrap} className="orb-wrap">
       {webgl ? (
         // offsetSize: measure layout size, not the scaled bounding box — the wrapper is scale-animated.
-        <Canvas resize={{ offsetSize: true }} dpr={[1, 1.75]} frameloop={visible ? "always" : "never"} camera={{ position: [0, 0, cameraZ], fov: 45 }} gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}>
-          <Blob state={state} />
+        <Canvas resize={{ offsetSize: true }} dpr={low ? [1, 1.25] : [1, 1.75]} frameloop={still ? "demand" : visible ? "always" : "never"} camera={{ position: [0, 0, cameraZ], fov: 45 }} gl={{ alpha: true, antialias: !low, powerPreference: "high-performance" }}>
+          <Blob state={state} detail={low ? 28 : 64} light={light} />
         </Canvas>
       ) : (
         <div className="orb-fallback" />

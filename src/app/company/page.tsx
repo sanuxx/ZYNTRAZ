@@ -15,7 +15,7 @@ export default function CompanyPage() {
       <PageHero
         eyebrow="About Zyntraz"
         title={<>We rebuild how<br /><span className="grad-text">businesses operate.</span></>}
-        lede={<>Zyntraz is an AI-first engineering company. We build <strong>AI agents, intelligent workflows and custom business systems</strong> for companies that are ready to stop patching the chaos.</>}
+        lede={<>Zyntraz is an AI-first engineering company. Alongside <strong>AI agents and intelligent automation</strong>, we build software, websites, web systems and custom platforms for companies ready to stop patching the chaos.</>}
         primary={{ label: "Work with us", href: "/contact" }}
         secondary={{ label: "Explore Zyntraz AI", href: "/ai" }}
       />

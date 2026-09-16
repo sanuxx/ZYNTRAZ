@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { BASE_PATH } from "@/lib/site";
 
 // The first render is covered by the logo intro; only later client navigations get the curtain.
 let firstRender = true;
@@ -26,7 +27,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
       {animate && (
         <div ref={curtain} className="pt-curtain" aria-hidden="true">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="pt-logo" src="/zyntraz-logo-white.png" alt="" width={894} height={174} />
+          <img className="pt-logo" src={`${BASE_PATH}/zyntraz-logo-white.png`} alt="" width={894} height={174} />
         </div>
       )}
       <div ref={content}>{children}</div>

@@ -9,7 +9,6 @@ import SplitText from "gsap/SplitText";
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const HEADINGS = ".h-hero[data-reveal], .h-xl[data-reveal], .h-lg[data-reveal], .final-title[data-reveal]";
-const TILT = ".card, .glass, .deploy li";
 const MAGNETIC = ".btn-primary.btn-lg, .gnav-cta";
 
 // Site-wide GSAP layer, rebuilt for every page.
@@ -107,23 +106,6 @@ export default function Motion() {
       });
 
       if (!finePointer) return;
-
-      // Cards tilt toward the cursor.
-      document.querySelectorAll<HTMLElement>(TILT).forEach((el) => {
-        let armed = false;
-        const rx = gsap.quickTo(el, "rotationX", { duration: 0.6, ease: "power3" });
-        const ry = gsap.quickTo(el, "rotationY", { duration: 0.6, ease: "power3" });
-        const move = (e: PointerEvent) => {
-          if (!armed) { armed = true; el.style.transition = "none"; gsap.set(el, { transformPerspective: 1000 }); }
-          const r = el.getBoundingClientRect();
-          rx(-((e.clientY - r.top) / r.height - 0.5) * 7);
-          ry(((e.clientX - r.left) / r.width - 0.5) * 7);
-        };
-        const leave = () => { rx(0); ry(0); };
-        el.addEventListener("pointermove", move);
-        el.addEventListener("pointerleave", leave);
-        cleanups.push(() => { el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", leave); });
-      });
 
       // Primary buttons lean toward the cursor.
       document.querySelectorAll<HTMLElement>(MAGNETIC).forEach((el) => {

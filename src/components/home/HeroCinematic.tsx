@@ -15,7 +15,7 @@ import { whenReady } from "@/lib/scroll";
 gsap.registerPlugin(ScrollTrigger);
 
 const Orb = dynamic(() => import("@/components/3d/Orb"), { ssr: false });
-const Starfield = dynamic(() => import("@/components/3d/Starfield"), { ssr: false });
+const GradientField = dynamic(() => import("@/components/3d/GradientField"), { ssr: false });
 
 // Offsets are fractions of the viewport (x of width, y of height), relative to the orb centre.
 const inputs = [
@@ -64,14 +64,13 @@ export default function HeroCinematic() {
         .fromTo(".hx-orb-inner", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 2.4, ease: "expo.out" })
         .fromTo(s, { intensity: 0 }, { intensity: 0.4, duration: 2.4, ease: "power2.out" }, 0)
         .fromTo(".hx-glow", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 2.6, ease: "expo.out" }, 0)
-        .fromTo(".hx-eyebrow", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, 0.3)
         .fromTo(".hx-title .w", { opacity: 0, y: 60, filter: "blur(20px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.4, stagger: 0.14, ease: "expo.out" }, 0.4)
         .fromTo(".hx-fade", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1.1, stagger: 0.12, ease: "power3.out" }, 1.0);
 
       if (reduce) return;
 
       // Orb starts low, rising from the bottom edge, so the headline and CTAs stay clear.
-      gsap.set(".hx-orb", { y: () => H() * 0.22, scale: 0.9 });
+      gsap.set(".hx-orb", { y: () => H() * 0.17, scale: 0.9 });
       gsap.set(".hx-chip, .hx-thought", { xPercent: -50, yPercent: -50 });
       gsap.set(".hx-in", { opacity: 0, x: (i) => inputs[i].from[0] * W(), y: (i) => inputs[i].from[1] * H() });
       gsap.set(".hx-thought", { opacity: 0, scale: 0.8, x: (i) => thoughts[i].at[0] * W(), y: (i) => thoughts[i].at[1] * H() });
@@ -128,7 +127,12 @@ export default function HeroCinematic() {
         .to(s, { intensity: 0.35, hue: 0, speed: 1, duration: 1 }, 9.2)
         .to(".hx-orb", { scale: 0.85, y: () => H() * 0.04, duration: 1 }, 9.2)
         .fromTo(".hx-final", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.8 }, 9.4)
-        .to({}, { duration: 0.8 });
+        .to({}, { duration: 0.4 });
+
+      // Handover, played while the hero scrolls away: the orb bursts; the particle universe below reassembles it.
+      gsap.timeline({ scrollTrigger: { trigger: root, start: "bottom bottom", end: "bottom 25%", scrub: 0.8 } })
+        .to(s, { intensity: 1.3, speed: 3.2, duration: 0.8 }, 0)
+        .to(".hx-orb", { scale: 2.1, opacity: 0, duration: 1, ease: "power2.in" }, 0);
     }, root);
 
     const onMove = (e: PointerEvent) => {
@@ -140,28 +144,31 @@ export default function HeroCinematic() {
   }, []);
 
   return (
-    <section ref={ref} className="hx dark" aria-label="Zyntraz — intelligence, engineered">
+    <section ref={ref} className="hx" aria-label="Zyntraz — intelligence, engineered">
       <div className="hx-stage">
-        <div className="hx-stars" aria-hidden="true"><Starfield state={orb} /></div>
-        <div className="hx-nebula" aria-hidden="true"><i /><i /><i /></div>
+        <div className="hx-field" aria-hidden="true"><GradientField state={orb} /></div>
         <div className="hx-glow" aria-hidden="true" />
         <div className="hx-orb" aria-hidden="true">
-          <div className="hx-orb-inner"><Orb state={orb} /></div>
+          <div className="hx-orb-inner"><Orb state={orb} light /></div>
         </div>
 
         <div className="hx-intro">
-          <p className="hx-eyebrow grad-text">Zyntraz Intelligence</p>
           <h1 className="hx-title">
             <span className="w">Intelligence,</span>{" "}
             <span className="w grad-text">engineered.</span>
           </h1>
           <p className="hx-sub hx-fade">
-            AI agents and intelligent business systems that listen, reason and act — so your business runs itself.
+            An AI-first engineering company. We build AI agents — plus the software, websites, web systems and custom platforms your business runs on.
           </p>
           <div className="hx-ctas hx-fade">
             <Link href="/contact" className="btn btn-primary btn-lg">Book a free consultation</Link>
             <Link href="/ai" className="link-chev">See Zyntraz AI <ChevronRight size={18} /></Link>
           </div>
+          <ul className="hx-trust hx-fade">
+            <li><b>10+</b> systems engineered</li>
+            <li><b>15+</b> clients served</li>
+            <li><b>99.9%</b> reliability</li>
+          </ul>
         </div>
 
         <div className="hx-beat hx-b1">
@@ -185,6 +192,7 @@ export default function HeroCinematic() {
             <Link href="/contact" className="link-chev">Book a demo <ChevronRight size={18} /></Link>
           </div>
         </div>
+
 
         <div className="hx-layer" aria-hidden="true">
           {inputs.map(({ icon: Icon, text }) => (

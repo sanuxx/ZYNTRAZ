@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   BarChart3, BookOpen, Bot, BrainCircuit, CalendarCheck, Check, FileSearch, FlaskConical, Lock, Mail,
-  MessageCircle, MessageSquareText, Package, Receipt, Rocket, ScanEye, ScrollText, Search, ShieldCheck,
-  Sparkles, Target, TrendingUp, UserCheck, Users, Workflow, X,
+  MessageCircle, Package, Receipt, Rocket, ScrollText, Search, ShieldCheck, Target, UserCheck, Users, X,
 } from "lucide-react";
 
 type ToolId = "whatsapp" | "email" | "crm" | "inventory" | "accounts" | "docs" | "calendar" | "reports";
@@ -183,29 +182,6 @@ export function ChatbotVsAgent() {
           <li><Check size={16} /> Finishes the job — and asks for approval when it matters</li>
         </ul>
       </div>
-    </div>
-  );
-}
-
-const capabilities = [
-  { icon: Workflow, title: "Agentic workflows", desc: "Multi-step agentic workflows handling complex business logic end-to-end — across every system you use." },
-  { icon: MessageSquareText, title: "LLM-powered assistants", desc: "Custom AI assistants trained on your knowledge base, embedded in your products, website and WhatsApp." },
-  { icon: TrendingUp, title: "Predictive analytics", desc: "ML models trained on your data to forecast demand, churn, and business outcomes." },
-  { icon: ScanEye, title: "Computer vision", desc: "Automated image analysis, quality inspection, and visual data extraction at scale." },
-  { icon: ShieldCheck, title: "Compliance AI", desc: "Automated document review, risk flagging, and regulatory compliance monitoring." },
-  { icon: Sparkles, title: "Generative pipelines", desc: "Content generation, summarization, and data transformation for enterprise." },
-];
-
-export function AICapabilities() {
-  return (
-    <div className="ai-grid">
-      {capabilities.map(({ icon: Icon, title, desc }, i) => (
-        <article key={title} className="card ai-card" data-reveal style={{ ["--d" as string]: `${(i % 3) * 0.08}s` }}>
-          <span className="ai-card-ico"><Icon size={22} /></span>
-          <h3>{title}</h3>
-          <p>{desc}</p>
-        </article>
-      ))}
     </div>
   );
 }

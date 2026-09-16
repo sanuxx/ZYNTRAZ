@@ -5,7 +5,7 @@ import { ArrowRight, Check, Mail, MessageCircle, Phone, Send } from "lucide-reac
 import MagneticButton from "@/components/ui/MagneticButton";
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL, WHATSAPP } from "@/lib/contact";
 
-const needs = ["AI agents", "Custom system", "Automation", "AI integration", "ZynRest", "ZynStay", "ZynDesk", "ZynCRM", "Not sure yet"];
+const needs = ["AI agents", "AI integration", "Software development", "Website", "Web system", "Custom system", "ZynRest", "ZynStay", "ZynDesk", "ZynCRM", "Not sure yet"];
 
 export default function Contact() {
   const [picked, setPicked] = useState<string[]>([]);
@@ -78,7 +78,7 @@ export default function Contact() {
           <div id="contact-form" style={{ scrollMarginTop: 100 }}>
             {sent ? (
               <div style={{ textAlign: "center", padding: "60px 0", display: "grid", gap: 14, justifyItems: "center" }}>
-                <span style={{ width: 56, height: 56, borderRadius: "50%", display: "grid", placeItems: "center", background: "var(--brand)", boxShadow: "0 0 40px rgba(47,91,255,.7)" }}><Check size={26} /></span>
+                <svg className="success-check" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" /><path d="M20 33 l8 8 l16 -18" /></svg>
                 <h3 className="h-md">Your email is ready to send.</h3>
                 <p className="lede" style={{ fontSize: 15 }}>
                   We opened your email app with everything filled in — just hit send. If nothing opened, email us at{" "}

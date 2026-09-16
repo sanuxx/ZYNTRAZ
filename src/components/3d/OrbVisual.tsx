@@ -22,7 +22,7 @@ export default function OrbVisual({ intensity = 0.6, hue = 0.6 }: { intensity?: 
   return (
     <div className="orb-visual" aria-hidden="true">
       <div className="orb-visual-glow" />
-      <Orb state={state} cameraZ={3.6} />
+      <Orb state={state} cameraZ={3.6} light />
     </div>
   );
 }

@@ -7,6 +7,8 @@ import { Check, ChevronRight } from "lucide-react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { PLATFORM_CENTERS, swarmLayout, type SwarmState } from "@/components/3d/Particles";
+import SkipSection from "@/components/ui/SkipSection";
+import { EASE } from "@/lib/motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,22 +16,22 @@ const Particles = dynamic(() => import("@/components/3d/Particles"), { ssr: fals
 
 const chapters = [
   {
-    tag: "AI Agents", title: <>AI agents that work <span className="grad-text">around the clock.</span></>,
-    desc: "They answer customers on WhatsApp and email, qualify leads, process orders and resolve support cases — using your data, with your approval.",
-    points: ["Sales & support agents", "Assistants trained on your knowledge", "Human-in-the-loop control"],
+    tag: "AI & Agentic AI", title: <>AI agents that work <span className="grad-text">around the clock.</span></>,
+    desc: "Our core focus. Agents answer customers on WhatsApp and email, qualify leads, process orders and automate the repetitive work — using your data, with your approval.",
+    points: ["Sales & support agents", "Workflow automation", "Human-in-the-loop control"],
     href: "/ai", cta: "Explore Zyntraz AI",
   },
   {
-    tag: "Custom Business Systems", title: <>One operating system for <span className="grad-text">your whole business.</span></>,
-    desc: "We engineer software around how you actually work — orders, stock, customers, staff and finance in one place, with live dashboards.",
-    points: ["Web & cloud platforms", "Real-time dashboards & analytics", "IoT & hardware integration"],
+    tag: "Software & Custom Systems", title: <>Software built around <span className="grad-text">how you actually work.</span></>,
+    desc: "Custom software and business systems engineered from the ground up — POS, CRM, ERP, inventory and anything your operation needs, in one place.",
+    points: ["Software development", "Custom system development", "Dashboards, data & IoT"],
     href: "/services", cta: "See our services",
   },
   {
-    tag: "Automation & Integration", title: <>Your tools, connected. <span className="grad-text">Your work, automated.</span></>,
-    desc: "We connect your POS, accounts, CRM and apps — then automate the repetitive work between them: invoices, approvals, reorders and reports.",
-    points: ["Workflow automation", "API integrations", "Migration off spreadsheets"],
-    href: "/solutions", cta: "See what we fix",
+    tag: "Web Development & Web Systems", title: <>Websites and web systems, <span className="grad-text">connected.</span></>,
+    desc: "Fast, modern websites that win customers — and web-based systems your team uses every day: portals, dashboards and booking platforms, linked to your tools.",
+    points: ["Web development", "Web system development", "API integrations"],
+    href: "/services", cta: "See web services",
   },
   {
     tag: "Ready-made Platforms", title: <>Proven platforms, <span className="grad-text">tailored to you.</span></>,
@@ -47,7 +49,7 @@ const getServerAspect = () => 16 / 9;
 
 export default function Journey() {
   const ref = useRef<HTMLElement>(null);
-  const swarm = useRef<SwarmState>({ m: 0, mx: 0, my: 0 });
+  const swarm = useRef<SwarmState>({ m: 0, mx: 0, my: 0, a: 0 });
   const aspect = useSyncExternalStore(subscribeResize, getAspect, getServerAspect);
 
   useEffect(() => {
@@ -57,14 +59,21 @@ export default function Journey() {
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ctx = gsap.context(() => {
-      if (reduce) return;
+      if (reduce) { swarm.current.a = 1; return; }
       const tl = gsap.timeline({
         defaults: { ease: "power2.inOut" },
         scrollTrigger: { trigger: ref.current, start: "top top", end: "bottom bottom", scrub: 0.8 },
       });
       gsap.set(".jr-ch, .jr-final, .jr-label", { autoAlpha: 0 });
+      // Light → dark on entry, continuing the hero.
+      // Opening beat, played while the section scrolls in: the hero orb's burst reassembles into the AI sphere.
+      gsap.timeline({ scrollTrigger: { trigger: ref.current, start: "top 20%", end: "top -25%", scrub: 0.8 } })
+        // Fade through brand blue rather than grey.
+        .fromTo(".jr-veil-in", { backgroundColor: "rgba(238,244,255,1)" }, { backgroundColor: "rgba(11,60,200,0)", duration: 0.8, ease: "power1.in" }, 0)
+        .fromTo(swarm.current, { a: 0 }, { a: 1, duration: 1, ease: EASE.inOut }, 0)
+        .fromTo(".skip-btn", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0.6);
       chapters.forEach((_, k) => {
-        const at = 2 * k;
+        const at = 2 * k + 0.6;
         tl.fromTo(`.jr-ch-${k}`, { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: 0.5 }, at + 0.25)
           .fromTo(`.jr-ch-${k} .jr-pt`, { autoAlpha: 0, x: -20 }, { autoAlpha: 1, x: 0, duration: 0.3, stagger: 0.08 }, at + 0.5)
           .to(`.jr-rail-${k}`, { opacity: 1, duration: 0.3 }, at + 0.25)
@@ -72,12 +81,14 @@ export default function Journey() {
           .to(`.jr-rail-${k}`, { opacity: 0.35, duration: 0.3 }, at + 1.6)
           .to(swarm.current, { m: k + 1, duration: 1, ease: "power1.inOut" }, at + 1.5);
       });
-      tl.fromTo(".jr-label", { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.35, stagger: 0.08 }, 6.5)
-        .to(".jr-label", { autoAlpha: 0, duration: 0.3 }, 7.4)
-        .fromTo(".jr-rail-fill", { scaleX: 0 }, { scaleX: 1, duration: 8, ease: "none" }, 0)
-        .to(".jr-rail", { autoAlpha: 0, duration: 0.4 }, 8.1)
-        .fromTo(".jr-final", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 8.7)
-        .to({}, { duration: 1.2 });
+      tl.fromTo(".jr-label", { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.35, stagger: 0.08 }, 7.1)
+        .to(".jr-label", { autoAlpha: 0, duration: 0.3 }, 8.0)
+        .fromTo(".jr-rail-fill", { scaleX: 0 }, { scaleX: 1, duration: 8, ease: "none" }, 0.6)
+        .to(".jr-rail", { autoAlpha: 0, duration: 0.4 }, 8.7)
+        .fromTo(".jr-final", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 9.3)
+        .to(".jr-final, .jr .skip-btn", { autoAlpha: 0, y: -30, duration: 0.5 }, 10.9)
+        // The next section slides up over the scene like a curtain (see .jr + .hpain).
+        .to({}, { duration: 0.8 });
     }, ref);
 
     return () => {
@@ -89,7 +100,7 @@ export default function Journey() {
   const L = swarmLayout(aspect, 3);
   const labelPos = PLATFORM_CENTERS.map(([x, y]) => ({
     left: `${50 + ((L.offX + x * L.scale) / L.viewW) * 100}%`,
-    top: `${50 - ((L.offY + (y - 0.45) * L.scale) / L.viewH) * 100}%`,
+    top: `${50 - ((L.offY + (y - 0.7) * L.scale) / L.viewH) * 100}%`,
   }));
 
   return (
@@ -97,6 +108,7 @@ export default function Journey() {
       <div className="jr-stage">
         <div className="jr-nebula" aria-hidden="true"><i /><i /></div>
         <div className="jr-canvas" aria-hidden="true"><Particles state={swarm} /></div>
+        <div className="jr-veil jr-veil-in" aria-hidden="true" />
 
         <div className="jr-rail" aria-hidden="true">
           <div className="jr-rail-bar"><div className="jr-rail-fill" /></div>
@@ -117,9 +129,11 @@ export default function Journey() {
           <span key={p} className="jr-label" style={labelPos[i]} aria-hidden="true">{p}</span>
         ))}
 
+        <SkipSection />
+
         <div className="jr-final">
-          <p className="jr-final-tag">Intelligence, engineered.</p>
-          <p className="jr-final-list">AI Agents · Custom Systems · Automation · Platforms</p>
+          <p className="jr-final-tag">We build <span className="grad-text">AI agents</span> — and the software, websites &amp; systems your business runs on.</p>
+          <p className="jr-final-list">AI · Software · Web · Web Systems · Custom Systems</p>
           <div className="cta-row">
             <Link href="/contact" className="btn btn-primary btn-lg">Book a free consultation</Link>
             <Link href="/ai" className="link-chev">See it in action <ChevronRight size={18} /></Link>

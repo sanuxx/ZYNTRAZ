@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { BASE_PATH } from "@/lib/site";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -38,7 +39,7 @@ export default function Story() {
         <div className="story-final">
           <small>Welcome to</small>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/zyntraz-logo-white.png" alt="Zyntraz" width={894} height={174} />
+          <img src={`${BASE_PATH}/zyntraz-logo-white.png`} alt="Zyntraz" width={894} height={174} />
         </div>
       </div>
     </section>

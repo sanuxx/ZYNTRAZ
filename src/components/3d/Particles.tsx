@@ -3,8 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { isLowPower, prefersReducedMotion } from "@/lib/device";
+import { BASE_PATH } from "@/lib/site";
 
-export type SwarmState = { m: number; mx: number; my: number };
+// m: shape morph 0..4. a: assemble 0 (scattered burst) → 1 (formed). mx/my: pointer.
+export type SwarmState = { m: number; mx: number; my: number; a: number };
 
 // Shared between the WebGL scene and the HTML labels so both agree on where shapes sit.
 export const CAMERA_Z = 6;
@@ -104,13 +107,49 @@ function buildShapes(n: number) {
     put(s2, i, v);
   }
 
-  // 3 — Platforms: four small spiral galaxies, one per product.
-  const tilt = new THREE.Euler(0.55, 0, 0);
+  // 3 — Platforms: four floating app windows, each sketching its product's UI.
+  // Window-local space: x -0.75..0.75, y -0.5..0.5; title bar above y 0.3.
+  const WIN_W = 1.5, WIN_H = 1.0;
+  const uis: [number, number, number, number][][] = [
+    // ZynRest — POS tile grid
+    [[-0.68, 0.02, -0.26, 0.26], [-0.21, 0.02, 0.21, 0.26], [0.26, 0.02, 0.68, 0.26],
+      [-0.68, -0.44, -0.26, -0.06], [-0.21, -0.44, 0.21, -0.06], [0.26, -0.44, 0.68, -0.06]],
+    // ZynStay — booking timeline
+    [[-0.6, 0.16, 0.1, 0.26], [-0.2, -0.02, 0.62, 0.08], [-0.68, -0.2, -0.2, -0.1], [0.05, -0.38, 0.55, -0.28]],
+    // ZynDesk — ticket list and chat bubbles
+    [[-0.68, 0.16, -0.22, 0.26], [-0.68, -0.02, -0.22, 0.08], [-0.68, -0.2, -0.22, -0.1], [-0.68, -0.38, -0.22, -0.28],
+      [-0.12, 0.12, 0.4, 0.24], [0.12, -0.1, 0.66, 0.02], [-0.12, -0.34, 0.36, -0.22]],
+    // ZynCRM — pipeline columns and cards
+    [[-0.66, 0.1, -0.26, 0.26], [-0.66, -0.12, -0.26, 0.04], [-0.2, 0.1, 0.2, 0.26], [-0.2, -0.12, 0.2, 0.04],
+      [-0.2, -0.34, 0.2, -0.18], [0.26, 0.1, 0.66, 0.26]],
+  ];
+  const areas = uis.map((rects) => {
+    let acc = 0;
+    return rects.map(([x0, y0, x1, y1]) => (acc += (x1 - x0) * (y1 - y0)));
+  });
+  const winTilt = [new THREE.Euler(0.16, 0.3, 0), new THREE.Euler(0.16, -0.3, 0), new THREE.Euler(-0.12, 0.3, 0), new THREE.Euler(-0.12, -0.3, 0)];
   for (let i = 0; i < n; i++) {
-    const [cx, cy] = PLATFORM_CENTERS[i % 4];
-    const rr = Math.pow(r(), 0.7) * 0.72, arm = Math.floor(r() * 3);
-    const th = rr * 5.2 + (arm * Math.PI * 2) / 3 + (r() - 0.5) * 0.5;
-    v.set(Math.cos(th) * rr, (r() - 0.5) * 0.06, Math.sin(th) * rr).applyEuler(tilt).add(new THREE.Vector3(cx, cy, 0));
+    const k = i % 4, roll = r();
+    let x: number, y: number;
+    if (roll < 0.34) {
+      // Window outline.
+      const t = r() * 2 * (WIN_W + WIN_H);
+      if (t < WIN_W) { x = t - WIN_W / 2; y = WIN_H / 2; }
+      else if (t < WIN_W + WIN_H) { x = WIN_W / 2; y = WIN_H / 2 - (t - WIN_W); }
+      else if (t < 2 * WIN_W + WIN_H) { x = WIN_W / 2 - (t - WIN_W - WIN_H); y = -WIN_H / 2; }
+      else { x = -WIN_W / 2; y = -WIN_H / 2 + (t - 2 * WIN_W - WIN_H); }
+    } else if (roll < 0.44) {
+      // Title bar: divider line and three dots.
+      if (r() < 0.55) { x = (r() - 0.5) * WIN_W; y = 0.3; }
+      else { const a = r() * Math.PI * 2, rad = Math.sqrt(r()) * 0.028; x = -0.64 + Math.floor(r() * 3) * 0.075 + Math.cos(a) * rad; y = 0.4 + Math.sin(a) * rad; }
+    } else {
+      // Product UI blocks, sampled by area so density is even.
+      const cum = areas[k], pick = r() * cum[cum.length - 1];
+      const [x0, y0, x1, y1] = uis[k][cum.findIndex((c) => c >= pick)];
+      x = x0 + r() * (x1 - x0); y = y0 + r() * (y1 - y0);
+    }
+    const [cx, cy] = PLATFORM_CENTERS[k];
+    v.set(x + (r() - 0.5) * 0.012, y + (r() - 0.5) * 0.012, (r() - 0.5) * 0.02).applyEuler(winTilt[k]).add(new THREE.Vector3(cx, cy, 0));
     put(s3, i, v);
   }
 
@@ -119,7 +158,7 @@ function buildShapes(n: number) {
 
 async function sampleLogo(n: number, width: number) {
   const img = new Image();
-  img.src = "/zyntraz-logo-white.png";
+  img.src = `${BASE_PATH}/zyntraz-logo-white.png`;
   await img.decode();
   const W = 520, H = Math.round((W * img.height) / img.width);
   const c = document.createElement("canvas");
@@ -142,13 +181,18 @@ async function sampleLogo(n: number, width: number) {
 const vertexShader = /* glsl */ `
 attribute vec3 aS0; attribute vec3 aS1; attribute vec3 aS2; attribute vec3 aS3; attribute vec3 aS4;
 attribute float aRand;
-uniform float uM; uniform float uTime; uniform float uSize; uniform float uPixel;
+uniform float uM; uniform float uA; uniform float uTime; uniform float uSize; uniform float uPixel;
 varying float vRand; varying float vGlow;
 float seg(float k){ return smoothstep(0.0, 1.0, clamp((uM - k) * 1.35 - aRand * 0.35, 0.0, 1.0)); }
 void main(){
   float t1 = seg(0.0), t2 = seg(1.0), t3 = seg(2.0), t4 = seg(3.0);
   vec3 p = mix(aS0, aS1, t1); p = mix(p, aS2, t2); p = mix(p, aS3, t3); p = mix(p, aS4, t4);
   float mid = max(max(t1 * (1.0 - t1), t2 * (1.0 - t2)), max(t3 * (1.0 - t3), t4 * (1.0 - t4))) * 4.0;
+  // Assemble from a burst: each particle flies in from its own far-out direction.
+  vec3 dir = normalize(vec3(sin(aRand * 91.7), cos(aRand * 47.3), sin(aRand * 13.1 + 1.3)) + 0.001);
+  float ga = smoothstep(0.0, 1.0, clamp(uA * 1.3 - aRand * 0.3, 0.0, 1.0));
+  p = mix(dir * (3.5 + aRand * 5.0), p, ga);
+  mid = max(mid, ga * (1.0 - ga) * 3.0);
   float tt = uTime * 0.6 + aRand * 6.2831;
   vec3 swirl = vec3(sin(p.y * 2.7 + tt), sin(p.z * 2.3 + tt * 1.3), sin(p.x * 2.9 + tt * 0.7));
   p += swirl * (0.018 + 0.7 * mid) * (1.0 - t4 * 0.7);
@@ -175,7 +219,7 @@ function Swarm({ state, n }: { state: React.RefObject<SwarmState>; n: number }) 
   const mat = useRef<THREE.ShaderMaterial>(null);
   const { size } = useThree();
   const shapes = useMemo(() => buildShapes(n), [n]);
-  const uniforms = useMemo(() => ({ uM: { value: 0 }, uTime: { value: 0 }, uSize: { value: 26 }, uPixel: { value: 1 } }), []);
+  const uniforms = useMemo(() => ({ uM: { value: 0 }, uA: { value: 0 }, uTime: { value: 0 }, uSize: { value: 26 }, uPixel: { value: 1 } }), []);
 
   useEffect(() => {
     let alive = true;
@@ -193,6 +237,7 @@ function Swarm({ state, n }: { state: React.RefObject<SwarmState>; n: number }) 
     const u = mat.current!.uniforms;
     u.uTime.value += Math.min(dt, 0.05);
     u.uM.value += (s.m - u.uM.value) * 0.12;
+    u.uA.value += (s.a - u.uA.value) * 0.1;
     u.uPixel.value = three.gl.getPixelRatio();
     const L = swarmLayout(size.width / size.height, u.uM.value);
     const g = group.current!;
@@ -227,7 +272,9 @@ function Swarm({ state, n }: { state: React.RefObject<SwarmState>; n: number }) 
 export default function Particles({ state }: { state: React.RefObject<SwarmState> }) {
   const wrap = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const [n] = useState(() => (window.innerWidth < 768 ? 6000 : 11000));
+  const [low] = useState(isLowPower);
+  const [still] = useState(prefersReducedMotion);
+  const n = low ? 3500 : 11000;
 
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting));
@@ -237,7 +284,7 @@ export default function Particles({ state }: { state: React.RefObject<SwarmState
 
   return (
     <div ref={wrap} style={{ position: "absolute", inset: 0 }}>
-      <Canvas resize={{ offsetSize: true }} dpr={[1, 1.75]} frameloop={visible ? "always" : "never"} camera={{ position: [0, 0, CAMERA_Z], fov: 45 }} gl={{ alpha: true, antialias: false }}>
+      <Canvas resize={{ offsetSize: true }} dpr={low ? [1, 1.25] : [1, 1.75]} frameloop={still ? "demand" : visible ? "always" : "never"} camera={{ position: [0, 0, CAMERA_Z], fov: 45 }} gl={{ alpha: true, antialias: false }}>
         <Swarm state={state} n={n} />
       </Canvas>
     </div>
