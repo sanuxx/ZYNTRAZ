@@ -15,7 +15,9 @@ export const metadata: Metadata = {
   title: { default: "Zyntraz — Intelligence, engineered.", template: "%s — Zyntraz" },
   description:
     "Zyntraz is an AI-first engineering company. We build AI agents, custom software, websites, web systems and custom business systems. Book a free consultation.",
-  icons: { icon: `${BASE_PATH}/zyntraz-logo.png` },
+  // The full wordmark is a wide rectangle — squished into a browser tab's square favicon slot it
+  // reads as an illegible sliver, so the tab icon uses just the arrow accent cropped from it instead.
+  icons: { icon: `${BASE_PATH}/zyntraz-mark.png` },
   openGraph: {
     title: "Zyntraz — Intelligence, engineered.",
     description: "AI-first engineering company: AI agents, software development, web development, web systems and custom system development.",
